@@ -12,6 +12,8 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
     "@repo/functions": "workspace:*",
     "@repo/shared": "workspace:*",
@@ -25,6 +27,7 @@
     "lucide-react": "^0.563.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -33,6 +36,7 @@
     "@repo/eslint-config": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@types/node": "^25.2.2",
     "@types/react": "^18.3.14",
     "@types/react-dom": "^18.3.4",
     "@vitejs/plugin-react": "^4.3.4",

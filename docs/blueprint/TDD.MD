@@ -97,7 +97,7 @@ fitlink/
 - `gender` (string)
 - `height` (number, optional)
 - `weight` (number, optional)
-- `activityLevel` (string: Sedentary / Light / Moderate / High)
+<!-- - `activityLevel` (string: Sedentary / Light / Moderate / High) -->
 - `profilePicUrl` (string, optional)
 - `createdAt` (timestamp)
 
