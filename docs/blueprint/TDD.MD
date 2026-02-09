@@ -1,309 +1,208 @@
-# 🛠️ Technical Design Document (TDD)
+# **FitLink Technical Design Document (TDD)**
 
-## Product: FitLink
-
-**Architecture:** Monorepo (The Hytel Way)  
-**Product Type:** Freemium SaaS Fitness Tracking & Coaching Platform
-
----
-
-## 1. Technical Objectives
-
-- End-to-end type safety across frontend and backend
-- Clear separation of server state and client/UI state
-- Scalable monorepo architecture
-- Secure multi-tenant trainer–trainee access control
-- High developer experience and maintainability
-- Fast, safe iteration via CI/CD
+**Project Name:** FitLink
+**Version:** 1.0
+**Author:** Fernando Jose Ordiales
+**Date:** 9/2/2026
+**Tech Stack:** Firebase, React, TypeScript, Tailwind CSS, Shadcn, Zustand, Turborepo, PNPM, TanStack Query, Zod, Vite, Vitest
 
 ---
 
-## 2. Tech Stack Overview
+## **1. Project Overview**
 
-| Layer         | Technology           |
-| ------------- | -------------------- |
-| Monorepo      | pnpm + Turborepo     |
-| Frontend      | React + Vite         |
-| Language      | TypeScript           |
-| Styling       | Tailwind CSS         |
-| UI Components | Shadcn UI            |
-| API Layer     | tRPC                 |
-| Server State  | TanStack Query       |
-| Client State  | Zustand              |
-| Validation    | Zod                  |
-| Testing       | Vitest               |
-| CI/CD         | GitHub Actions + WIF |
+FitLink is a dual-role fitness platform with **Trainee** and **Trainer** user types. Trainees track workouts, view analytics, and interact with trainers. Trainers create plans, monitor progress, and provide feedback. The project uses a **monorepo structure** for scalable development with Turborepo.
 
 ---
 
-## 3. Monorepo Structure
+## **2. Tech Stack & Rationale**
 
-apps/
-├── web/
-│ ├── src/
-│ │ ├── pages/
-│ │ ├── components/
-│ │ ├── hooks/
-│ │ ├── stores/
-│ │ ├── lib/
-│ │ ├── providers/
-│ │ └── styles/
-│
-└── functions/
-└── src/trpc/
-├── routers/
-├── procedures/
-├── middleware/
-└── context.ts
-
-packages/
-├── ui/
-├── shared/
-├── eslint-config/
-└── typescript-config/
+| Layer              | Technology                | Purpose                                                      |
+| ------------------ | ------------------------- | ------------------------------------------------------------ |
+| Frontend           | **React + TypeScript**    | Component-based UI with type safety                          |
+| Styling            | **Tailwind CSS + Shadcn** | Utility-first CSS + component library for rapid UI           |
+| State Management   | **Zustand**               | Lightweight global state for UI and app state                |
+| Data Fetching      | **TanStack Query**        | Server-state management, caching, and queries                |
+| Backend / DB       | **Firebase**              | Firestore DB, Auth, Storage, Hosting                         |
+| Validation         | **Zod**                   | Schema validation for TypeScript-safe forms and API requests |
+| Bundler            | **Vite**                  | Fast dev server & build tool                                 |
+| Testing            | **Vitest**                | Unit and integration tests                                   |
+| Package Management | **PNPM**                  | Fast, deterministic dependency management                    |
+| Monorepo           | **Turborepo**             | Manage frontend, backend, and shared code packages           |
 
 ---
 
-## 4. State Management Strategy
+## **3. Architectural Design**
 
-FitLink uses both **TanStack Query** and **Zustand**, each with a clearly defined role.
-
-### 4.1 TanStack Query (Server State)
-
-Used for:
-
-- Workouts
-- Nutrition logs
-- Analytics
-- Trainer–trainee relationships
-- Feedback
-- User profile data
-
-Characteristics:
-
-- Cached and refetchable
-- Synced with backend
-- Invalidated on mutation
-- Source of truth for persisted data
-
-Example:
-
-```ts
-const { data: workouts } = trpc.workout.list.useQuery()
-
-### 4.2 Zustand (Client / UI State)
-
-Used for:
-
-- Selected trainee
-- Dashboard filters
-- Date ranges
-- Modal and drawer state
-- Onboarding progress
-
-type DashboardStore = {
-  selectedTraineeId: string | null
-  dateRange: 'week' | 'month'
-  setSelectedTraineeId: (id: string) => void
-  setDateRange: (range: 'week' | 'month') => void
-}
-
-export const useDashboardStore = create<DashboardStore>((set) => ({
-  selectedTraineeId: null,
-  dateRange: 'week',
-  setSelectedTraineeId: (id) => set({ selectedTraineeId: id }),
-  setDateRange: (range) => set({ dateRange: range }),
-}))
-
-5. Frontend Architecture (apps/web)
-5.1 Application Providers
-
-<QueryClientProvider client={queryClient}>
-  <TRPCProvider>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
-  </TRPCProvider>
-</QueryClientProvider>
-
-5.2 Frontend Layers
-| Layer      | Responsibility             |
-| ---------- | -------------------------- |
-| Pages      | Routing and layout         |
-| Components | UI composition             |
-| Hooks      | Business logic and queries |
-| Stores     | UI state (Zustand)         |
-| Lib        | Clients and utilities      |
-
-6. Backend Architecture (apps/functions)
-6.1 tRPC Context
-export type Context = {
-  user: AuthUser | null
-  db: DatabaseClient
-}
-
-
-6.2 Feature Routers
-
-routers/
-├── auth.router.ts
-├── user.router.ts
-├── workout.router.ts
-├── nutrition.router.ts
-├── analytics.router.ts
-├── trainer.router.ts
-├── feedback.router.ts
-└── subscription.router.ts
-
-6.3 Example Router
-export const workoutRouter = router({
-  list: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.workout.findMany({
-      where: { userId: ctx.user.id },
-    })
-  }),
-
-  create: protectedProcedure
-    .input(CreateWorkoutSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.db.workout.create({
-        data: { ...input, userId: ctx.user.id },
-      })
-    }),
-})
-
-7. Shared Schemas & Types
-packages/shared/src/schemas
-
-export const CreateWorkoutSchema = z.object({
-  date: z.date(),
-  exercises: z.array(
-    z.object({
-      name: z.string(),
-      sets: z.number(),
-      reps: z.number(),
-      weight: z.number().optional(),
-    })
-  ),
-})
-
-8. Core Domain Models
-User
-
-- id
-- role (trainee | trainer)
-- profile data
-- subscription tier
-
-Workout
-
-- id
-- traineeId
-- date
-- exercises
-- completion status
-
-NutritionLog
-
-- id
-- traineeId
-- meals
-- macros
-
-TrainerRelationship
-
-- trainerId
-- traineeId
-- permissions
-
-Feedback
-
-- id
-- trainerId
-- traineeId
-- message
-- createdAt
-
-9. Feature-to-Tech Mapping
-
-| Feature           | Frontend           | Backend | State           |
-| ----------------- | ------------------ | ------- | --------------- |
-| Workout Logging   | React + Shadcn     | tRPC    | Query           |
-| Analytics         | Charts + filters   | tRPC    | Query + Zustand |
-| Trainer Dashboard | React              | tRPC    | Query           |
-| Feedback          | UI + notifications | tRPC    | Query           |
-| Onboarding        | Wizard UI          | —       | Zustand         |
-| Subscriptions     | UI + guards        | tRPC    | Query           |
-
-10. Data Flow Example
-
-Logging a Workout
-
-1. User submits workout form
-2. tRPC mutation is called
-3. Input validated with Zod
-4. Workout persisted to database
-5. workout.list query invalidated
-6. UI updates automatically
-
-11. Authentication & Authorization
-
-- Authentication handled via provider and injected into tRPC context
-- Role-based authorization enforced server-side
-- Trainer access scoped to assigned trainee IDs only
-
-12. Error Handling Strategy
-Frontend
-
-- Toast notifications
-- Inline validation errors
-- Query retries where applicable
-
-Backend
-
-- Zod validation errors
-- Typed tRPC errors
-- No sensitive data exposure
-
-13. Testing Strategy
-
-Frontend
-
-- Component tests (Vitest)
-- Hook and store tests
-
-Backend
-
-- Router unit tests
-- Validation and authorization tests
-
-14. Performance Considerations
-
-- TanStack Query caching and invalidation
-- Memoized Zustand selectors
-- Lazy-loaded dashboard routes
-- Minimal client-side state
-
-15. Security Considerations
-
-- Role-based access control
-- Tenant isolation
-- Secure data access patterns
-- Server-side validation only
-
-16. CI/CD & Deployment
-
-- Turborepo pipelines
-- GitHub Actions workflows
-- WIF-secured GCP deployments
-- Automated linting, testing, and builds
-
-17. Future Technical Enhancements
-
-- Real-time trainer updates (WebSockets)
-- Offline workout logging
-- Mobile apps sharing the same API
-- Analytics pre-aggregation
-- AI-assisted insights
+### **3.1 High-Level Architecture**
 
 ```
++---------------------------+
+|        Frontend           |  (React + TS + Tailwind + Shadcn)
+|---------------------------|
+|  Components               |
+|  Pages                    |
+|  Zustand (state)          |
+|  TanStack Query (server)  |
++------------+--------------+
+             |
+             v
++---------------------------+
+|        Firebase           |
+|---------------------------|
+|  Auth (users & roles)     |
+|  Firestore DB             |
+|  Storage (profile/workouts)|
+|  Cloud Functions (optional)|
++---------------------------+
+```
+
+- **Frontend** communicates with **Firebase** via REST/SDK.
+- **Zustand** manages local UI state.
+- **TanStack Query** manages server-state and caching.
+- **Firebase Auth** handles Trainee and Trainer roles.
+- **Firestore** stores structured app data.
+- **Cloud Functions** (optional) handle complex business logic like notifications.
+
+---
+
+### **3.2 Monorepo Structure (Turborepo + PNPM)**
+
+```
+fitlink/
+├─ apps/
+│  ├─ web/          # React app
+│  └─ admin/        # Optional trainer admin panel
+├─ packages/
+│  ├─ ui/           # Shadcn + custom components
+│  ├─ types/        # TypeScript types & Zod schemas
+│  ├─ store/        # Zustand stores
+│  └─ utils/        # Shared utilities & helpers
+├─ package.json
+├─ pnpm-workspace.yaml
+└─ turbo.json
+```
+
+---
+
+## **4. Database Design**
+
+### **4.1 Firestore Collections**
+
+1. **users**
+
+- `uid` (string, Firebase Auth UID)
+- `role` (enum: 'trainee' | 'trainer')
+- `name` (string)
+- `age` (number)
+- `gender` (string)
+- `height` (number, optional)
+- `weight` (number, optional)
+- `activityLevel` (string: Sedentary / Light / Moderate / High)
+- `profilePicUrl` (string, optional)
+- `createdAt` (timestamp)
+
+2. **traineeGoals**
+
+- `userId` (ref to users)
+- `goals` (array of strings)
+- `preferredWorkoutTypes` (array of strings)
+- `frequencyPerWeek` (number)
+- `targetTimeline` (string, e.g., '3 months')
+- `createdAt` (timestamp)
+
+3. **workouts**
+
+- `userId` (ref to users)
+- `date` (timestamp)
+- `type` (string: Cardio / Strength / etc.)
+- `duration` (number, minutes)
+- `intensity` (string: Low / Medium / High)
+- `notes` (string, optional)
+- `createdAt` (timestamp)
+
+4. **trainers**
+
+- `userId` (ref to users)
+- `certifications` (array of strings)
+- `specialties` (array of strings)
+- `availability` (array of {day, startTime, endTime})
+- `traineeIds` (array of refs to users)
+- `createdAt` (timestamp)
+
+5. **feedback**
+
+- `trainerId` (ref)
+- `traineeId` (ref)
+- `workoutId` (ref)
+- `message` (string)
+- `createdAt` (timestamp)
+
+---
+
+### **4.2 Entity Relationship (Simplified)**
+
+```
+[users] <1----* [workouts]
+    |         \
+    |          \
+    |           \
+    *            *
+[traineeGoals]  [feedback]
+    ^             ^
+    |             |
+[trainers] ------ *
+```
+
+- One **trainer** can have multiple trainees.
+- One **trainee** can receive multiple feedback entries.
+- **TraineeGoals** are one-to-one with a trainee.
+
+---
+
+## **5. Frontend Design**
+
+### **5.1 Pages / Routes**
+
+- `/onboarding` – Multi-step onboarding (trainee/trainer)
+- `/dashboard` – Role-specific dashboard
+- `/workouts` – Log/view workouts
+- `/trainer` – Trainee: view trainer / Trainer: manage trainees
+- `/analytics` – Trainee: progress charts / Trainer: trainee reports
+- `/profile` – Edit personal info, goals, and preferences
+
+### **5.2 State Management**
+
+- **Zustand**: User auth info, onboarding state, UI state
+- **TanStack Query**: Server-state (workouts, trainees, feedback)
+
+### **5.3 Forms & Validation**
+
+- **Zod** schemas for onboarding, workout logging, feedback
+- Integrated with React Hook Form or Shadcn components
+
+---
+
+## **6. Backend Design**
+
+- Firebase handles backend (serverless):
+
+  - **Auth:** User registration, role-based login
+  - **Firestore:** Data storage
+  - **Storage:** Profile pictures, attachments
+  - **Cloud Functions (optional):** Notifications, analytics triggers
+
+---
+
+## **7. Testing**
+
+- **Unit Tests:** Vitest for components, stores, and utils
+- **Integration Tests:** Form validation, Firebase interaction
+- **E2E Tests (optional):** Cypress or Playwright
+
+---
+
+## **8. Security & Roles**
+
+- **Trainee:** Can view/edit own data, log workouts, see feedback
+- **Trainer:** Can manage trainees, provide feedback, view reports
+- **Firestore Security Rules:** Role-based access control

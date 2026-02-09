@@ -1,243 +1,110 @@
-# ✅ TODO
+# **FitLink To-Do List**
 
-> Living development checklist for **FitLink**  
-> Aligned with `PDD.md` and `TDD.md`
+## **1. Project Setup**
 
----
-
-## 🧱 Phase 0 — Project Setup & Foundations
-
-### Monorepo & Tooling
-
-- [ ] Initialize monorepo using pnpm + Turborepo
-- [ ] Verify Node.js (20+) and pnpm (8+) versions
-- [ ] Configure `pnpm-workspace.yaml`
-- [ ] Validate shared ESLint & TypeScript configs
-- [ ] Set up Prettier formatting rules
-- [ ] Confirm CI pipelines run on PRs
-
-### App Structure
-
-- [ ] Create `apps/web` (React + Vite)
-- [ ] Create `apps/functions` (tRPC backend)
-- [ ] Create `packages/ui`
-- [ ] Create `packages/shared`
-- [ ] Validate cross-package imports
+- [ ] Initialize Turborepo monorepo
+- [ ] Setup PNPM workspace
+- [ ] Create `apps/web` folder for React frontend
+- [ ] Create `packages/ui` for shared Shadcn components
+- [ ] Create `packages/store` for Zustand stores
+- [ ] Setup Vite + TypeScript
+- [ ] Install dependencies: React, Tailwind CSS, Shadcn, Zustand, TanStack Query, Zod, Firebase SDK
+- [ ] Configure Vitest for unit testing
 
 ---
 
-## 🔐 Phase 1 — Authentication & User Roles
+## **2. Firebase Setup**
 
-### Backend
-
-- [ ] Implement auth provider integration
-- [ ] Inject authenticated user into tRPC context
-- [ ] Define user roles (trainee, trainer)
-- [ ] Create role-based middleware
-- [ ] Write auth guard tests
-
-### Frontend
-
-- [ ] Build login and signup screens
-- [ ] Implement role selection during onboarding
-- [ ] Add route guards per role
-- [ ] Store auth state via TanStack Query
+- [ ] Setup Firebase project
+- [ ] Enable Firebase Auth (email/password login)
+- [ ] Configure Firestore database
+- [ ] Setup Firebase Storage (profile pics, media uploads)
+- [ ] Setup initial Firestore collections: `users`, `traineeGoals`, `workouts`, `trainers`, `feedback`, `notifications`
+- [ ] Write Firestore Security Rules for role-based access
 
 ---
 
-## 👤 Phase 2 — User Profile & Onboarding
+## **3. Trainee Features**
 
-### Shared
+### **3.1 Onboarding**
 
-- [ ] Create Zod schemas for user profile
-- [ ] Export shared types to frontend
+- [ ] Step 1: Personal info (name, age, gender, activity level, optional: height/weight)
+- [ ] Step 2: Fitness goals (goal type, timeline)
+- [ ] Step 3: Exercise preferences (workout types, frequency, duration)
+- [ ] Step 4 (Optional): Trainer & notifications preferences
+- [ ] Validate onboarding forms with Zod
+- [ ] Persist onboarding data to Firestore (`users`, `traineeGoals`)
 
-### Backend
+### **3.2 Dashboard**
 
-- [ ] Create user profile router
-- [ ] Implement profile create/update procedures
+- [ ] Display overall progress (charts/graphs using data from workouts)
+- [ ] Show goal achievement status
+- [ ] Display trainer info
+- [ ] Integrate TanStack Query to fetch workouts and progress
 
-### Frontend
+### **3.3 Workouts**
 
-- [ ] Build onboarding wizard UI
-- [ ] Store onboarding progress in Zustand
-- [ ] Persist completed profile to backend
+- [ ] Log new workouts (type, duration, intensity, notes)
+- [ ] Edit/delete workouts
+- [ ] Sync workouts with Firestore
+- [ ] Visualize workout history
 
----
+### **3.4 Trainer Interaction**
 
-## 🏋️ Phase 3 — Workout Tracking (Core MVP)
-
-### Shared
-
-- [ ] Define workout & exercise schemas
-
-### Backend
-
-- [ ] Implement workout router (list, create, update)
-- [ ] Enforce trainee ownership of workouts
-- [ ] Add workout validation tests
-
-### Frontend
-
-- [ ] Build workout logging form
-- [ ] Implement workout history list
-- [ ] Add workout reuse/duplicate feature
-- [ ] Fetch workouts via TanStack Query
-- [ ] Invalidate queries on mutation
+- [ ] Invite trainer (link trainee to trainer)
+- [ ] View trainer feedback for workouts
+- [ ] Messaging / notifications from trainer
+- [ ] Display notifications on dashboard
 
 ---
 
-## 📊 Phase 4 — Analytics Dashboard (Basic)
+## **4. Trainer Features**
 
-### Backend
+### **4.1 Onboarding**
 
-- [ ] Create analytics router
-- [ ] Aggregate workout frequency data
-- [ ] Aggregate basic progress metrics
+- [ ] Enter personal info (name, experience, certification)
+- [ ] Select specialties (strength, cardio, yoga, etc.)
+- [ ] Set availability for trainees
 
-### Frontend
+### **4.2 Dashboard**
 
-- [ ] Build analytics dashboard layout
-- [ ] Add date range filters (Zustand)
-- [ ] Render charts for workout frequency
-- [ ] Display strength progression per exercise
+- [ ] View list of assigned trainees
+- [ ] Track trainee progress (workouts, goals, analytics)
+- [ ] Generate weekly/monthly trainee reports
 
----
+### **4.3 Feedback & Communication**
 
-## 🧑‍🏫 Phase 5 — Trainer Dashboard & Access Control
-
-### Shared
-
-- [ ] Define trainer–trainee relationship schema
-
-### Backend
-
-- [ ] Implement trainer invitation flow
-- [ ] Implement trainer acceptance flow
-- [ ] Enforce scoped data access
-- [ ] Create trainer dashboard router
-
-### Frontend
-
-- [ ] Build trainer dashboard UI
-- [ ] Implement trainee list view
-- [ ] Add trainee selection (Zustand)
-- [ ] Display trainee activity indicators
+- [ ] Send feedback to trainee workouts
+- [ ] Messaging system for trainees
+- [ ] Receive notifications on trainee activity or requests
 
 ---
 
-## 💬 Phase 6 — Feedback System
+## **5. Shared / System Features**
 
-### Shared
-
-- [ ] Create feedback schema
-
-### Backend
-
-- [ ] Implement feedback router
-- [ ] Enforce trainer-only feedback creation
-- [ ] Add feedback history queries
-
-### Frontend
-
-- [ ] Build feedback input UI
-- [ ] Display feedback timeline
-- [ ] Add feedback notifications
+- [ ] Authentication: Role-based login (trainee or trainer)
+- [ ] Profile management: Edit personal info, preferences
+- [ ] Notifications: Push/email for goal milestones, feedback, reminders
+- [ ] Validation: All forms validated using Zod
+- [ ] State management: Setup Zustand for UI state + user state
+- [ ] Server state: Setup TanStack Query for Firestore reads/writes
+- [ ] Testing: Unit tests for forms, stores, components (Vitest)
 
 ---
 
-## 🍎 Phase 7 — Nutrition Tracking
+## **6. Design & UI**
 
-### Shared
-
-- [ ] Define nutrition log schema
-- [ ] Define macronutrient structure
-
-### Backend
-
-- [ ] Implement nutrition router
-- [ ] Add meal logging endpoints
-
-### Frontend
-
-- [ ] Build nutrition logging UI
-- [ ] Display macro breakdown
-- [ ] Integrate nutrition data into analytics
+- [ ] Design UI for onboarding (3–4 steps)
+- [ ] Design dashboards (trainee vs trainer)
+- [ ] Design workout logging pages
+- [ ] Design trainer management pages
+- [ ] Responsive design using Tailwind + Shadcn
 
 ---
 
-## 🔔 Phase 8 — Notifications & Engagement
+## **7. Optional / Future Enhancements**
 
-### Backend
-
-- [ ] Implement notification triggers
-- [ ] Add inactivity detection logic
-
-### Frontend
-
-- [ ] Build notification center
-- [ ] Add workout reminder UI
-- [ ] Add feedback alert UI
-- [ ] Implement notification preferences
-
----
-
-## 💳 Phase 9 — Monetization (Freemium)
-
-### Backend
-
-- [ ] Implement subscription tiers
-- [ ] Enforce feature gating
-- [ ] Track subscription status
-
-### Frontend
-
-- [ ] Build pricing page
-- [ ] Show premium feature locks
-- [ ] Add upgrade/downgrade flow
-
----
-
-## 🧪 Phase 10 — Testing & Quality
-
-### Frontend
-
-- [ ] Write component tests (Vitest)
-- [ ] Test Zustand stores
-- [ ] Test critical user flows
-
-### Backend
-
-- [ ] Write router unit tests
-- [ ] Test authorization rules
-- [ ] Validate schema coverage
-
----
-
-## 🚀 Phase 11 — Deployment & CI/CD
-
-- [ ] Configure environment variables
-- [ ] Set up WIF authentication
-- [ ] Enable dev/stage/prod deployments
-- [ ] Verify production build pipeline
-- [ ] Run full precheck before release
-
----
-
-## 🌱 Phase 12 — Post-MVP Enhancements
-
-- [ ] AI-assisted insights
-- [ ] Workout plan templates
-- [ ] Real-time trainer updates
-- [ ] Offline workout logging
-- [ ] Mobile app planning
-
----
-
-## 🧠 Ongoing
-
-- [ ] Keep PDD.md updated
-- [ ] Keep TDD.md updated
-- [ ] Refactor aggressively after validation
-- [ ] Gather user feedback early
-- [ ] Optimize only after usage is proven
+- [ ] Cloud Functions for automated notifications
+- [ ] Export / share progress reports
+- [ ] Multi-trainer support per trainee
+- [ ] Gamification: badges, achievements

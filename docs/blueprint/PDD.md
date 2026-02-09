@@ -1,277 +1,137 @@
-# 📘 Product Design Document
+# **FitLink Product Design Document **
 
-## Product Overview
-
-**Product Name (Working Title):** FitLink  
-**Product Type:** Freemium SaaS Fitness Tracking & Coaching Platform  
-**Target Platforms:** Web (MVP), Mobile (Future)  
-**Primary Users:** Trainees, Trainers
-
----
-
-## 1. Purpose & Vision
-
-### Purpose
-
-FitLink simplifies and strengthens the relationship between trainees and trainers by combining **workout tracking, progress analytics, nutrition guidance, and two-way feedback** into one intuitive platform.
-
-### Vision
-
-To become the go-to casual fitness platform where:
-
-- Trainees clearly see progress and stay motivated
-- Trainers coach smarter using real data
-- Fitness tracking feels supportive, not overwhelming
+**Project Name:** FitLink
+**Platform:** Web
+**Methodology:** Agile (Scrum)
+**Version:** 1.1
+**Author:** Fernando Jose Ordiales
+**Date:** 9/2/2026
 
 ---
 
-## 2. Problem Statement
+## **1. Product Vision**
 
-### Current Problems
-
-- Trainees track workouts inconsistently or across multiple apps
-- Trainers lack real-time visibility into trainee progress outside the gym
-- Existing apps focus on solo tracking or hardcore athletes, not collaboration
-- Trainer–trainee communication is scattered across tools and memory
-
-### Solution
-
-A shared platform where:
-
-- Trainees log workouts and nutrition easily
-- Trainers monitor progress and provide structured feedback
-- Both rely on a single source of truth
+FitLink is a fitness platform connecting trainees and trainers. Trainees can log workouts, track progress, receive feedback, and analyze performance, while trainers can monitor trainees, provide guidance, and manage training plans. The platform supports personalized onboarding for both roles.
 
 ---
 
-## 3. Goals & Success Metrics
+## **2. Target Users**
 
-### Product Goals
-
-- Enable consistent workout and nutrition tracking
-- Improve trainer–trainee communication
-- Provide actionable insights through analytics
-- Support both free and premium users
-
-### Success Metrics (KPIs)
-
-- Weekly Active Users (WAU)
-- Workout logging consistency (% completed)
-- Trainer–trainee connection rate
-- Feedback engagement (read/responded)
-- Free → Premium conversion rate
+1. **Trainees:** Fitness enthusiasts wanting to log workouts, track progress, and receive trainer guidance.
+2. **Trainers:** Certified fitness professionals who create training plans, monitor trainee progress, and provide feedback.
 
 ---
 
-## 4. User Personas
+## **3. Agile Approach**
 
-### Trainee Persona
-
-- Wants visible progress and accountability
-- Prefers simple, easy-to-understand analytics
-- Works with a trainer or plans to
-
-### Trainer Persona
-
-- Manages multiple trainees
-- Needs fast insights without manual tracking
-- Values efficiency and structured feedback
+- **Sprints:** 2 weeks
+- **Backlog:** Epics → Features → User Stories
+- **Iterations:** Continuous feedback from both trainees and trainers
 
 ---
 
-## 5. User Roles & Permissions
+## **4. Epics, Features, and User Stories**
 
-| Role          | Capabilities                                                   |
-| ------------- | -------------------------------------------------------------- |
-| **Trainee**   | Log workouts, view analytics, invite trainer, receive feedback |
-| **Trainer**   | View trainee data, provide feedback, manage trainees           |
-| **Dual Role** | Switch between trainee and trainer dashboards                  |
+### **TRAINEE SIDE**
 
----
+**Epic 1: Trainee Onboarding**
 
-## 6. Core Features Overview
+- **Goal:** Personalize the trainee experience.
+- **Features:** Personal Info, Fitness Goals, Exercise Preferences, Trainer Preferences
+- **User Stories:**
 
-### Trainee Features
+  - US1.1 – Enter personal info (name, age, activity level)
+  - US1.2 – Set fitness goals
+  - US1.3 – Set preferred workouts and frequency
+  - US1.4 – Select trainer guidance & notifications
 
-- Workout logging (strength & cardio)
-- Nutrition tracking and diet plans
-- Progress analytics dashboard
-- Trainer feedback viewing
-- Trainer access control
+**Epic 2: Trainee Dashboard & Progress Tracking**
 
-### Trainer Features
+- **Goal:** Track and visualize fitness progress
+- **Features:** Workout logging, analytics, goal tracking
+- **User Stories:**
 
-- Trainee management dashboard
-- Workout and nutrition visibility
-- Trainee-specific analytics
-- Feedback and coaching tools
+  - US2.1 – Log workouts (type, duration, intensity)
+  - US2.2 – View analytics (graphs, progress charts)
+  - US2.3 – Track goal achievement
 
----
+**Epic 3: Trainer Interaction (Trainee)**
 
-## 7. Functional Requirements
+- **Goal:** Connect with trainers
+- **Features:** Invite trainer, feedback system, messaging
+- **User Stories:**
 
-### 7.1 User Accounts & Onboarding
-
-- Email and social authentication
-- Role selection during onboarding
-- Fitness profile setup
-- Secure access and session management
-
-### 7.2 Workout Tracking
-
-- Manual workout logging
-- Exercise-level tracking (sets, reps, weight)
-- Cardio tracking (duration, intensity)
-- Workout history and reuse
-- Completion status
-
-### 7.3 Nutrition & Diet Planning
-
-- Goal-based diet selection
-- Daily meal logging
-- Macronutrient visualization
-- Trainer diet recommendations
-
-### 7.4 Analytics & Insights
-
-- Workout frequency trends
-- Strength progression per exercise
-- Body metric tracking
-- Nutrition vs workout correlation
-- Simple, readable charts
-
-### 7.5 Trainer Dashboard
-
-- Trainee list overview
-- Recent activity indicators
-- Individual trainee analytics
-- Engagement and inactivity alerts
-
-### 7.6 Feedback & Communication
-
-- Workout-level feedback
-- General progress notes
-- Feedback notifications
-- Feedback history view
-
-### 7.7 Trainer Access Control
-
-- Trainer invitation via email or code
-- Granular data-sharing permissions
-- Access revocation
-- Trainer acceptance flow
-
-### 7.8 Monetization
-
-- Free tier with core tracking
-- Premium tier with advanced analytics
-- Trainer premium tools
-- Upgrade and downgrade flows
-
-### 7.9 Notifications & Engagement
-
-- Workout reminders
-- Feedback alerts
-- Inactivity nudges
-- Notification preferences
+  - US3.1 – Invite a trainer
+  - US3.2 – Receive feedback
+  - US3.3 – Messaging & notifications
 
 ---
 
-## 8. Non-Functional Requirements
+### **TRAINER SIDE**
 
-### Performance
+**Epic 4: Trainer Onboarding**
 
-- Dashboard load times under 2 seconds
-- Real-time workout updates for trainers
+- **Goal:** Capture trainer info and specialties
+- **Features:** Personal Info, Certifications, Expertise Areas
+- **User Stories:**
 
-### Security & Privacy
+  - US4.1 – Enter trainer profile info (name, experience, certification)
+  - US4.2 – Specify specialization (strength, cardio, yoga, HIIT, etc.)
+  - US4.3 – Set availability for trainees
 
-- Role-based access control
-- Secure data storage
-- Trainer access explicitly granted by trainees
+- **Requirements:** Validation for certifications, optional profile photo
 
-### Scalability
+**Epic 5: Trainer Dashboard**
 
-- Support growing trainee counts per trainer
-- Modular feature expansion
+- **Goal:** Allow trainers to manage trainees and workouts
+- **Features:** Trainee list, Workout plans, Analytics
+- **User Stories:**
 
-### Accessibility
+  - US5.1 – View list of assigned trainees
+  - US5.2 – Create and assign workout plans
+  - US5.3 – Track trainee progress and performance trends
 
-- Clear typography and color contrast
-- Mobile-friendly layouts (Web MVP)
+**Epic 6: Trainer Feedback & Communication**
 
----
+- **Goal:** Enable trainers to guide trainees effectively
+- **Features:** Feedback system, Messaging, Notifications
+- **User Stories:**
 
-## 9. UX & Design Principles
+  - US6.1 – Send feedback to trainees on workouts
+  - US6.2 – Message trainees in-app
+  - US6.3 – Receive notifications on trainee activity or requests
 
-- **Clarity over complexity** — no overwhelming dashboards
-- **Data with meaning** — insights, not raw numbers
-- **Trainer-first efficiency** — minimal clicks for common tasks
-- **Motivational tone** — progress, not pressure
+**Epic 7: Trainer Reports & Insights**
 
----
+- **Goal:** Provide actionable insights for trainers
+- **Features:** Trainee performance reports, Progress analytics
+- **User Stories:**
 
-## 10. User Flows
-
-### Trainee Flow
-
-1. Sign up → Choose Trainee
-2. Complete onboarding
-3. Log workouts and nutrition
-4. Invite trainer
-5. View analytics and receive feedback
-
-### Trainer Flow
-
-1. Sign up → Choose Trainer
-2. Accept trainee invitations
-3. View trainee dashboard
-4. Review progress
-5. Provide feedback
+  - US7.1 – View weekly/monthly trainee progress
+  - US7.2 – Generate reports for multiple trainees
+  - US7.3 – Highlight underperforming or high-achieving trainees
 
 ---
 
-## 11. MVP Scope
+### **5. Shared Features for Both Roles**
 
-### Included in MVP
-
-- User accounts and roles
-- Workout logging
-- Basic analytics
-- Trainer dashboard
-- Feedback system
-- Trainer invitations
-
-### Excluded (Post-MVP)
-
-- Advanced nutrition analytics
-- AI-driven recommendations
-- Mobile applications
-- Wearable integrations
+- **Authentication & Authorization:** Login/Register as Trainee or Trainer
+- **Profile Management:** Edit personal info, preferences, and account settings
 
 ---
 
-## 12. Risks & Assumptions
+### **6. Non-Functional Requirements**
 
-### Assumptions
-
-- Users are willing to log workouts manually
-- Trainers want a centralized coaching tool
-
-### Risks
-
-- Over-complicated analytics early
-- Low engagement without reminders
-- Trainer adoption lag
-
-**Mitigation:** Start simple, validate usage, iterate quickly.
+- Platform: Web, iOS, Android
+- Security: Encrypted data, role-based access control
+- Performance: Load main dashboard < 2 seconds
+- Scalability: Support multiple trainees per trainer
+- Accessibility: WCAG compliance
 
 ---
 
-## 13. Future Enhancements
+### **7. Agile Implementation Notes**
 
-- AI-assisted progress insights
-- Workout plan templates
-- In-app messaging
-- Wearable integrations
-- Mobile apps (iOS & Android)
+- **Backlog Organization:** Separate backlogs for Trainee and Trainer epics
+- **Sprint Planning:** Mix high-priority trainee and trainer stories to deliver complete features
+- **Daily Standups & Retrospective:** Track progress and adjust based on feedback from both user types
