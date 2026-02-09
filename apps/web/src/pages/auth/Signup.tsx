@@ -61,7 +61,13 @@ const Signup = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="age">Age</Label>
-                <Input id="age" type="number" min="0" required />
+                <Input
+                  id="age"
+                  type="number"
+                  min="0"
+                  required
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender</Label>
@@ -83,13 +89,25 @@ const Signup = () => {
                 <Label htmlFor="height">
                   Height (cm) <span className="text-muted-foreground text-xs">(Optional)</span>
                 </Label>
-                <Input id="height" type="number" min="0" placeholder="175" />
+                <Input
+                  id="height"
+                  type="number"
+                  min="0"
+                  placeholder="175"
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="weight">
                   Weight (kg) <span className="text-muted-foreground text-xs">(Optional)</span>
                 </Label>
-                <Input id="weight" type="number" min="0" placeholder="70" />
+                <Input
+                  id="weight"
+                  type="number"
+                  min="0"
+                  placeholder="70"
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
               </div>
             </div>
 
