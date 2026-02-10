@@ -55,8 +55,8 @@ export const frequencyOptions = [
 ]
 
 export const timelineOptions = [
-  { value: '1_month', label: '1 Month' },
-  { value: '3_months', label: '3 Months' },
-  { value: '6_months', label: '6 Months' },
-  { value: '1_year', label: '1 Year' },
+  { value: '1 month', label: '1 Month' },
+  { value: '3 months', label: '3 Months' },
+  { value: '6 months', label: '6 Months' },
+  { value: '1 year', label: '1 Year' },
 ]

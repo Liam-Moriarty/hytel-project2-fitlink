@@ -36,8 +36,14 @@ export const createTraineeGoals = async (userId: string, data: any) => {
   await setDoc(doc(db, 'traineeGoals', userId), {
     userId,
     ...data,
+    completedWorkouts: [], // Initialize empty completed workouts
     createdAt: new Date(),
   })
+}
+
+export const updateTraineeGoals = async (userId: string, data: any) => {
+  const docRef = doc(db, 'traineeGoals', userId)
+  await updateDoc(docRef, data)
 }
 
 export const createTrainerProfile = async (userId: string, data: any) => {

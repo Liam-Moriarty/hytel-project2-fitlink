@@ -97,6 +97,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  ::-webkit-scrollbar {
+    @apply w-[8px] h-[3px] bg-background;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-md;
+  }
 }
 
 /* =============================================================================

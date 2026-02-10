@@ -1,6 +1,6 @@
-import { getFullUser } from '@/lib/api/user'
+import { getFullUser, updateTraineeGoals } from '@/lib/api/user'
 import { getAuth } from 'firebase/auth'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { month1TraineeWorkoutPlan } from '@/constants/month1TraineeWorkoutPlan'
 import { month3TraineeWorkoutPlan } from '@/constants/month3TraineeWorkoutPlan'
 import { month6TraineeWorkoutPlan } from '@/constants/month6TraineeWorkoutPlan'
@@ -26,7 +26,7 @@ import {
   Activity,
   Trophy,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { UserData } from '@/interface'
 
@@ -42,19 +42,38 @@ const WorkoutPlan = () => {
 
   console.log(userData)
 
+  const queryClient = useQueryClient()
   const [completedWorkouts, setCompletedWorkouts] = useState<Set<string>>(new Set())
 
+  // Sync state with user data when loaded
+  useEffect(() => {
+    if (userData?.traineeGoals?.completedWorkouts) {
+      setCompletedWorkouts(new Set(userData.traineeGoals.completedWorkouts))
+    }
+  }, [userData])
+
+  const { mutate: updateGoals } = useMutation({
+    mutationFn: (newCompletedWorkouts: string[]) =>
+      updateTraineeGoals(currentUser!.uid, { completedWorkouts: newCompletedWorkouts }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user', currentUser?.uid] })
+    },
+  })
+
   const toggleWorkoutCompletion = (weekNum: number, dayNum: number) => {
+    if (!currentUser) return // Guard clause
+
     const key = `${weekNum}-${dayNum}`
-    setCompletedWorkouts(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(key)) {
-        newSet.delete(key)
-      } else {
-        newSet.add(key)
-      }
-      return newSet
-    })
+    const newSet = new Set(completedWorkouts)
+
+    if (newSet.has(key)) {
+      newSet.delete(key)
+    } else {
+      newSet.add(key)
+    }
+
+    setCompletedWorkouts(newSet) // Optimistic update
+    updateGoals(Array.from(newSet))
   }
 
   if (isLoading) {
@@ -173,16 +192,23 @@ const WorkoutPlan = () => {
       {/* Workout Plan Tabs */}
       <Tabs defaultValue="week-1" className="w-full">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
-          <TabsList className="h-auto flex-wrap max-md:justify-center w-full">
-            {currentWorkoutPlan.workoutPlan.map(week => (
-              <TabsTrigger
-                key={week.weekNumber}
-                value={`week-${week.weekNumber}`}
-                className="px-6 py-2"
-              >
-                Week {week.weekNumber}
-              </TabsTrigger>
-            ))}
+          <TabsList className="h-auto flex-wrap justify-start w-full">
+            {currentWorkoutPlan.workoutPlan.map(week => {
+              const isWeekCompleted = week.schedule.every(day =>
+                completedWorkouts.has(`${week.weekNumber}-${day.day}`)
+              )
+
+              return (
+                <TabsTrigger
+                  key={week.weekNumber}
+                  value={`week-${week.weekNumber}`}
+                  className="px-6 py-2 flex items-center gap-2"
+                >
+                  Week {week.weekNumber}
+                  {isWeekCompleted && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                </TabsTrigger>
+              )
+            })}
           </TabsList>
 
           <Badge variant="outline" className="text-sm py-1 px-3">
