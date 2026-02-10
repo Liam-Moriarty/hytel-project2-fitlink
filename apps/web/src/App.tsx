@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuthStore } from '@/lib/store/useAuthStore'
+import Dashboard from './pages/dashboard/Dashboard'
 
 const App = () => {
   const { setUser, setLoading, loading } = useAuthStore()
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/onboarding" element={<GetToKnow />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
