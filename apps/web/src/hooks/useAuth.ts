@@ -8,12 +8,14 @@ import { LoginFormValues, SignupFormValues } from '@/lib/schemas/auth'
 export const useSignupMutation = () => {
   const navigate = useNavigate()
   const setUser = useAuthStore(state => state.setUser)
+  const setUserData = useAuthStore(state => state.setUserData)
 
   return useMutation({
     mutationFn: (data: SignupFormValues) => signUpWithEmail(data),
     onSuccess: async user => {
       const userDoc = await getUser(user.uid)
       setUser(user)
+      setUserData(userDoc)
       if (userDoc?.role) {
         navigate('/dashboard')
       } else {
@@ -26,12 +28,14 @@ export const useSignupMutation = () => {
 export const useLoginMutation = () => {
   const navigate = useNavigate()
   const setUser = useAuthStore(state => state.setUser)
+  const setUserData = useAuthStore(state => state.setUserData)
 
   return useMutation({
     mutationFn: (data: LoginFormValues) => signInWithEmail(data),
     onSuccess: async user => {
       const userDoc = await getUser(user.uid)
       setUser(user)
+      setUserData(userDoc)
       if (userDoc?.role) {
         navigate('/dashboard')
       } else {
@@ -44,12 +48,14 @@ export const useLoginMutation = () => {
 export const useGoogleLoginMutation = () => {
   const navigate = useNavigate()
   const setUser = useAuthStore(state => state.setUser)
+  const setUserData = useAuthStore(state => state.setUserData)
 
   return useMutation({
     mutationFn: signInWithGoogle,
     onSuccess: async user => {
       const userDoc = await getUser(user.uid)
       setUser(user)
+      setUserData(userDoc)
       if (userDoc?.role) {
         navigate('/dashboard')
       } else {
@@ -61,12 +67,12 @@ export const useGoogleLoginMutation = () => {
 
 export const useLogoutMutation = () => {
   const navigate = useNavigate()
-  const setUser = useAuthStore(state => state.setUser)
+  const clearAuth = useAuthStore(state => state.clearAuth)
 
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      setUser(null)
+      clearAuth()
       navigate('/login')
     },
   })

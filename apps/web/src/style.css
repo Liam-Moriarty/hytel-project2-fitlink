@@ -40,13 +40,13 @@
     --chart-4: 0 0% 53.3333%;
     --chart-5: 0 0% 60%;
     --sidebar: 0 0% 7.0588%;
-    --sidebar-foreground: 0 0% 75.6863%;
-    --sidebar-primary: 22.2973 75.5102% 61.5686%;
-    --sidebar-primary-foreground: 270 5.5556% 7.0588%;
-    --sidebar-accent: 0 0% 20%;
-    --sidebar-accent-foreground: 0 0% 75.6863%;
-    --sidebar-border: 0 0% 13.3333%;
-    --sidebar-ring: 22.2973 75.5102% 61.5686%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
     --font-sans: Geist Mono, ui-monospace, monospace;
     --font-serif: serif;
     --font-mono: JetBrains Mono, monospace;
@@ -67,6 +67,17 @@
     --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
     --tracking-normal: 0rem;
     --spacing: 0.25rem;
+    --sidebar-background: 0 0% 98%;
+  }
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -98,10 +109,10 @@ body {
   min-height: 100vh;
 }
 
-#app {
+/* #app {
   max-width: 1280px;
   margin: 0 auto;
-}
+} */
 
 /* Hide spin buttons for number inputs */
 input[type='number']::-webkit-outer-spin-button,

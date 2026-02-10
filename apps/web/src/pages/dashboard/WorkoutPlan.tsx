@@ -1,5 +1,5 @@
 const WorkoutPlan = () => {
-  return <div>WorkoutPlan</div>
+  return <div className="text-4xl font-bold ">Workout Plan</div>
 }
 
 export default WorkoutPlan
