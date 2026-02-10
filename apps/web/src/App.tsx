@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuthStore } from '@/lib/store/useAuthStore'
-import { getUser } from '@/lib/api/user'
+import { getFullUser } from '@/lib/api/user'
 import Dashboard from './pages/dashboard/Dashboard'
 import DashboardHome from './pages/dashboard/DashboardHome'
 import WorkoutPlan from './pages/dashboard/WorkoutPlan'
@@ -24,7 +24,7 @@ const App = () => {
       setUser(user)
       if (user) {
         // Fetch user data from Firestore when auth state changes
-        const userDoc = await getUser(user.uid)
+        const userDoc = await getFullUser(user.uid)
         setUserData(userDoc)
       } else {
         setUserData(null)

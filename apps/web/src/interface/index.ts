@@ -18,6 +18,7 @@ export interface UserData {
   activityLevel?: string
   profilePicUrl?: string
   createdAt: any
+  traineeGoals?: any
 }
 
 export interface OnboardingFormData {

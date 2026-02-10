@@ -3,15 +3,28 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { UserData } from '@/interface'
 
-export const getUser = async (uid: string): Promise<UserData | null> => {
-  const docRef = doc(db, 'users', uid)
-  const docSnap = await getDoc(docRef)
+export const getFullUser = async (uid: string): Promise<UserData | null> => {
+  const userRef = doc(db, 'users', uid)
+  const userSnap = await getDoc(userRef)
 
-  if (docSnap.exists()) {
-    return docSnap.data() as UserData
-  } else {
-    return null
+  if (!userSnap.exists()) return null
+
+  const userData = userSnap.data()
+
+  // Only attempt to fetch goals if they are a Trainee
+  // (Or just fetch anyway—if it's not there, it returns null)
+  let traineeData = null
+
+  if (userData.role === 'trainee') {
+    const goalsRef = doc(db, 'traineeGoals', uid)
+    const goalsSnap = await getDoc(goalsRef)
+    traineeData = goalsSnap.exists() ? goalsSnap.data() : null
   }
+
+  return {
+    ...userData,
+    traineeGoals: traineeData,
+  } as UserData & { traineeGoals: any }
 }
 
 export const updateUser = async (uid: string, data: Partial<UserData>) => {

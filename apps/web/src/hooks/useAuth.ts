@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { signUpWithEmail, signInWithEmail, signInWithGoogle, logout } from '@/lib/api/auth'
-import { getUser } from '@/lib/api/user'
+import { getFullUser } from '@/lib/api/user'
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { LoginFormValues, SignupFormValues } from '@/lib/schemas/auth'
 import { useNavigate } from 'react-router-dom'
@@ -13,7 +13,7 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: (data: SignupFormValues) => signUpWithEmail(data),
     onSuccess: async user => {
-      const userDoc = await getUser(user.uid)
+      const userDoc = await getFullUser(user.uid)
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
@@ -33,7 +33,7 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: (data: LoginFormValues) => signInWithEmail(data),
     onSuccess: async user => {
-      const userDoc = await getUser(user.uid)
+      const userDoc = await getFullUser(user.uid)
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
@@ -53,7 +53,7 @@ export const useGoogleLoginMutation = () => {
   return useMutation({
     mutationFn: signInWithGoogle,
     onSuccess: async user => {
-      const userDoc = await getUser(user.uid)
+      const userDoc = await getFullUser(user.uid)
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
