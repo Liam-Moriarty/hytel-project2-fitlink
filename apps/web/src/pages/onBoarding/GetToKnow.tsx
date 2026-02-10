@@ -12,78 +12,111 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
-import { Role, Gender, ActivityLevel, OnboardingFormData } from './types'
+import { Role } from './types'
 import OnBoardStep1 from './OnBoardStep1'
 import OnBoardStep2 from './OnBoardStep2'
 import OnBoardStep3 from './OnBoardStep3'
 import OnBoardStep4 from './OnBoardStep4'
+import OnBoardStep5 from './OnBoardStep5'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { onboardingSchema, OnboardingFormValues } from './schemas'
+import { Form } from '@/components/ui/form'
 
 const GetToKnow = () => {
   const navigate = useNavigate()
   const { user, setUserData } = useAuthStore()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
-
-  // Form State
   const [role, setRole] = useState<Role>('trainee')
-  const [formData, setFormData] = useState<OnboardingFormData>({
-    gender: '' as Gender,
-    age: '',
-    height: '',
-    weight: '',
-    activityLevel: '' as ActivityLevel,
-    goals: [],
-    specialties: [],
-    preferredWorkoutTypes: [],
-    certifications: [],
+
+  const form = useForm<OnboardingFormValues>({
+    resolver: zodResolver(onboardingSchema),
+    defaultValues: {
+      gender: undefined,
+      age: '',
+      height: '',
+      weight: '',
+      activityLevel: undefined,
+      goals: [],
+      specialties: [],
+      preferredWorkoutTypes: [],
+      certifications: [],
+      frequencyPerWeek: '3',
+      targetTimeline: '3_months',
+      availability: [],
+    },
+    mode: 'onChange',
   })
 
-  // Handlers
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+  const { trigger, getValues } = form
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  const toggleSelection = (field: keyof OnboardingFormData, value: string) => {
-    setFormData(prev => {
-      const current = prev[field] as string[]
-      const updated = current.includes(value)
-        ? current.filter(item => item !== value)
-        : [...current, value]
-      return { ...prev, [field]: updated }
-    })
-  }
-
-  const handleNext = () => {
-    // Basic validation
+  const handleNext = async () => {
+    // Step 2 Validation
     if (step === 2) {
-      if (
-        !formData.gender ||
-        !formData.age ||
-        !formData.height ||
-        !formData.weight ||
-        !formData.activityLevel
-      ) {
-        alert('Please fill in all fields')
-        return
-      }
+      const isValid = await trigger(['gender', 'age', 'height', 'weight', 'activityLevel'])
+      if (!isValid) return
     }
+
+    // Step 3 Validation
     if (step === 3) {
-      if (role === 'trainee' && formData.goals.length === 0) {
-        alert('Please select at least one goal')
-        return
-      }
-      if (role === 'trainer' && formData.specialties.length === 0) {
-        alert('Please select at least one specialty')
-        return
+      if (role === 'trainee') {
+        const goals = getValues('goals')
+        if (goals.length === 0) {
+          form.setError('goals', { message: 'Please select at least one goal' })
+          return
+        }
+        form.clearErrors('goals')
+      } else {
+        const specialties = getValues('specialties')
+        if (specialties.length === 0) {
+          form.setError('specialties', { message: 'Please select at least one specialty' })
+          return
+        }
+        form.clearErrors('specialties')
       }
     }
+
+    // Step 4 Validation
     if (step === 4) {
-      handleSubmit()
+      if (role === 'trainee') {
+        const workouts = getValues('preferredWorkoutTypes')
+        if (workouts.length === 0) {
+          form.setError('preferredWorkoutTypes', {
+            message: 'Please select at least one workout type',
+          })
+          return
+        }
+      } else {
+        const certs = getValues('certifications')
+        if (certs.length === 0) {
+          form.setError('certifications', { message: 'Please select at least one certification' })
+          return
+        }
+      }
+
+      setStep(prev => prev + 1)
+      return
+    }
+
+    // Step 5 Validation
+    if (step === 5) {
+      if (role === 'trainee') {
+        const frequency = getValues('frequencyPerWeek')
+        const timeline = getValues('targetTimeline')
+        if (!frequency || !timeline) {
+          // Should be covered by default values but good to check
+          return
+        }
+      } else {
+        const availability = getValues('availability')
+        if (availability.length === 0) {
+          form.setError('availability', { message: 'Please select at least one available day' })
+          return
+        }
+      }
+
+      handleSubmit(getValues())
       return
     }
 
@@ -94,7 +127,7 @@ const GetToKnow = () => {
     setStep(prev => prev - 1)
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data: OnboardingFormValues) => {
     if (!user) return
     setLoading(true)
 
@@ -102,29 +135,29 @@ const GetToKnow = () => {
       // 1. Update User Profile
       const userData = {
         role,
-        gender: formData.gender,
-        age: Number(formData.age),
-        height: Number(formData.height),
-        weight: Number(formData.weight),
-        activityLevel: formData.activityLevel,
-        // profilePicUrl: user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`,
+        gender: data.gender,
+        age: Number(data.age),
+        height: Number(data.height),
+        weight: Number(data.weight),
+        activityLevel: data.activityLevel,
       }
 
       await updateUser(user.uid, userData)
 
       // 2. Create Role Specific Data
+      // 2. Create Role Specific Data
       if (role === 'trainee') {
         await createTraineeGoals(user.uid, {
-          goals: formData.goals,
-          preferredWorkoutTypes: formData.preferredWorkoutTypes,
-          frequencyPerWeek: 3, // Default for now
-          targetTimeline: '3 months', // Default for now
+          goals: data.goals,
+          preferredWorkoutTypes: data.preferredWorkoutTypes,
+          frequencyPerWeek: Number(data.frequencyPerWeek),
+          targetTimeline: data.targetTimeline,
         })
       } else {
         await createTrainerProfile(user.uid, {
-          specialties: formData.specialties,
-          certifications: formData.certifications,
-          availability: [], // Empty initially
+          specialties: data.specialties,
+          certifications: data.certifications,
+          availability: data.availability,
           traineeIds: [],
         })
       }
@@ -157,8 +190,9 @@ const GetToKnow = () => {
                 {step === 2 && 'Tell us about yourself'}
                 {step === 3 && (role === 'trainee' ? 'Set your goals' : 'Your Expertise')}
                 {step === 4 && (role === 'trainee' ? 'Workout Preferences' : 'Qualifications')}
+                {step === 5 && (role === 'trainee' ? 'Final Details' : 'Availability')}
               </CardTitle>
-              <CardDescription>Step {step} of 4</CardDescription>
+              <CardDescription>Step {step} of 5</CardDescription>
             </div>
             {step > 1 && (
               <Button variant="ghost" size="icon" onClick={handleBack}>
@@ -170,26 +204,19 @@ const GetToKnow = () => {
           <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
             <div
               className="h-full bg-primary transition-all duration-300 ease-in-out"
-              style={{ width: `${(step / 4) * 100}%` }}
+              style={{ width: `${(step / 5) * 100}%` }}
             />
           </div>
         </CardHeader>
 
         <CardContent>
-          {step === 1 && <OnBoardStep1 role={role} setRole={setRole} />}
-          {step === 2 && (
-            <OnBoardStep2
-              formData={formData}
-              handleInputChange={handleInputChange}
-              handleSelectChange={handleSelectChange}
-            />
-          )}
-          {step === 3 && (
-            <OnBoardStep3 role={role} formData={formData} toggleSelection={toggleSelection} />
-          )}
-          {step === 4 && (
-            <OnBoardStep4 role={role} formData={formData} toggleSelection={toggleSelection} />
-          )}
+          <Form {...form}>
+            {step === 1 && <OnBoardStep1 role={role} setRole={setRole} />}
+            {step === 2 && <OnBoardStep2 form={form} />}
+            {step === 3 && <OnBoardStep3 role={role} form={form} />}
+            {step === 4 && <OnBoardStep4 role={role} form={form} />}
+            {step === 5 && <OnBoardStep5 role={role} form={form} />}
+          </Form>
         </CardContent>
 
         <CardFooter className="flex justify-between mt-6">
@@ -204,7 +231,7 @@ const GetToKnow = () => {
           <Button onClick={handleNext} disabled={loading} className="px-8">
             {loading ? (
               'Saving...'
-            ) : step === 4 ? (
+            ) : step === 5 ? (
               'Finish'
             ) : (
               <span className="flex items-center">

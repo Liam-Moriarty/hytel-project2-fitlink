@@ -1,63 +1,88 @@
-import { Label } from '@/components/ui/label'
+import { FormField, FormItem, FormControl, FormMessage, FormLabel } from '@/components/ui/form'
+import { UseFormReturn } from 'react-hook-form'
+import { OnboardingFormValues } from './schemas'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Role, OnboardingFormData } from './types'
+import { Role } from './types'
+import { Path, ControllerRenderProps } from 'react-hook-form'
 
 interface OnBoardStep4Props {
   role: Role
-  formData: OnboardingFormData
-  toggleSelection: (field: keyof OnboardingFormData, value: string) => void
+  form: UseFormReturn<OnboardingFormValues>
 }
 
-const OnBoardStep4 = ({ role, formData, toggleSelection }: OnBoardStep4Props) => {
+const OnBoardStep4 = ({ role, form }: OnBoardStep4Props) => {
+  const workoutTypes = [
+    'Running',
+    'Cycling',
+    'Swimming',
+    'Weightlifting',
+    'Yoga',
+    'Pilates',
+    'HIIT',
+  ]
+  const certifications = ['ACE', 'NASM', 'ISSA', 'ACSM', 'CrossFit Level 1']
+
+  const fieldName = (
+    role === 'trainee' ? 'preferredWorkoutTypes' : 'certifications'
+  ) as Path<OnboardingFormValues>
+  const items = role === 'trainee' ? workoutTypes : certifications
+
   return (
     <div className="mt-6">
       <h3 className="text-lg font-medium mb-4">
         {role === 'trainee' ? 'Preferred Workouts' : 'Certifications'}
       </h3>
 
-      {role === 'trainee' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {['Running', 'Cycling', 'Swimming', 'Weightlifting', 'Yoga', 'Pilates', 'HIIT'].map(
-            item => (
-              <div
-                key={item}
-                className={cn(
-                  'p-4 rounded-lg border cursor-pointer flex items-center justify-between hover:border-primary transition-all',
-                  formData.preferredWorkoutTypes.includes(item) ? 'border-primary bg-primary/5' : ''
-                )}
-                onClick={() => toggleSelection('preferredWorkoutTypes', item)}
-              >
-                <span className="font-medium">{item}</span>
-                {formData.preferredWorkoutTypes.includes(item) && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </div>
-            )
-          )}
-        </div>
-      ) : (
-        <div className="space-y-3">
-          <Label>Add your certifications (Select or Type)</Label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {['ACE', 'NASM', 'ISSA', 'ACSM', 'CrossFit Level 1'].map(item => (
-              <div
-                key={item}
-                className={cn(
-                  'p-4 rounded-lg border cursor-pointer flex items-center justify-between hover:border-primary transition-all',
-                  formData.certifications.includes(item) ? 'border-primary bg-primary/5' : ''
-                )}
-                onClick={() => toggleSelection('certifications', item)}
-              >
-                <span className="font-medium">{item}</span>
-                {formData.certifications.includes(item) && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <FormField
+        control={form.control}
+        name={fieldName}
+        render={() => (
+          <FormItem>
+            {role === 'trainer' && <FormLabel>Add your certifications (Select or Type)</FormLabel>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {items.map(item => (
+                <FormField
+                  key={item}
+                  control={form.control}
+                  name={fieldName}
+                  render={({ field }: { field: ControllerRenderProps<OnboardingFormValues> }) => {
+                    return (
+                      <FormItem
+                        key={item}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <div
+                            className={cn(
+                              'w-full p-4 rounded-lg border cursor-pointer flex items-center justify-between hover:border-primary transition-all',
+                              field.value?.includes(item) ? 'border-primary bg-primary/5' : ''
+                            )}
+                            onClick={() => {
+                              const value = (field.value as string[]) || []
+                              if (value.includes(item)) {
+                                field.onChange(value.filter((val: string) => val !== item))
+                              } else {
+                                field.onChange([...value, item])
+                              }
+                            }}
+                          >
+                            <span className="font-medium">{item}</span>
+                            {field.value?.includes(item) && (
+                              <Check className="w-4 h-4 text-primary" />
+                            )}
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )
+                  }}
+                />
+              ))}
+            </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   )
 }

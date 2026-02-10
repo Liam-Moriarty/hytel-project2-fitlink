@@ -12,4 +12,7 @@ export interface OnboardingFormData {
   specialties: string[]
   preferredWorkoutTypes: string[]
   certifications: string[]
+  frequencyPerWeek: string
+  targetTimeline: string
+  availability: string[]
 }

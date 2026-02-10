@@ -1,5 +1,7 @@
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { UseFormReturn } from 'react-hook-form'
+import { OnboardingFormValues } from './schemas'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -7,85 +9,103 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { OnboardingFormData } from './types'
 
 interface OnBoardStep2Props {
-  formData: OnboardingFormData
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleSelectChange: (name: string, value: string) => void
+  form: UseFormReturn<OnboardingFormValues>
 }
 
-const OnBoardStep2 = ({ formData, handleInputChange, handleSelectChange }: OnBoardStep2Props) => {
+const OnBoardStep2 = ({ form }: OnBoardStep2Props) => {
   return (
     <div className="space-y-4 mt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="gender">Gender</Label>
-          <Select value={formData.gender} onValueChange={val => handleSelectChange('gender', val)}>
-            <SelectTrigger id="gender">
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Gender</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="age">Age</Label>
-          <Input
-            id="age"
-            name="age"
-            type="number"
-            placeholder="25"
-            value={formData.age}
-            onChange={handleInputChange}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="age"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Age</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="25" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="height">Height (cm)</Label>
-          <Input
-            id="height"
-            name="height"
-            type="number"
-            placeholder="175"
-            value={formData.height}
-            onChange={handleInputChange}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="height"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Height (cm)</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="175" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="weight">Weight (kg)</Label>
-          <Input
-            id="weight"
-            name="weight"
-            type="number"
-            placeholder="70"
-            value={formData.weight}
-            onChange={handleInputChange}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="weight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Weight (kg)</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="70" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="activity">Activity Level</Label>
-          <Select
-            value={formData.activityLevel}
-            onValueChange={val => handleSelectChange('activityLevel', val)}
-          >
-            <SelectTrigger id="activity">
-              <SelectValue placeholder="Select activity level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sedentary">Sedentary (Little or no exercise)</SelectItem>
-              <SelectItem value="light">Light (Exercise 1-3 days/week)</SelectItem>
-              <SelectItem value="moderate">Moderate (Exercise 3-5 days/week)</SelectItem>
-              <SelectItem value="high">High (Exercise 6-7 days/week)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <FormField
+          control={form.control}
+          name="activityLevel"
+          render={({ field }) => (
+            <FormItem className="md:col-span-2">
+              <FormLabel>Activity Level</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select activity level" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="sedentary">Sedentary (Little or no exercise)</SelectItem>
+                  <SelectItem value="light">Light (Exercise 1-3 days/week)</SelectItem>
+                  <SelectItem value="moderate">Moderate (Exercise 3-5 days/week)</SelectItem>
+                  <SelectItem value="high">High (Exercise 6-7 days/week)</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
     </div>
   )
