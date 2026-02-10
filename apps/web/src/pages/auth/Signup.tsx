@@ -8,17 +8,29 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { signupSchema, SignupFormValues } from '@/lib/schemas/auth'
+import { useSignupMutation, useGoogleLoginMutation } from '@/hooks/useAuth'
 
 const Signup = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+  })
+
+  const { mutate: signup, isPending, error } = useSignupMutation()
+  const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation()
+
+  const onSubmit = (data: SignupFormValues) => {
+    signup(data)
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-xl">
@@ -29,90 +41,80 @@ const Signup = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Select>
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="trainee">Trainee</SelectItem>
-                  <SelectItem value="trainer">Trainer</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {error && (
+              <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
+                {error.message}
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
-              <Input id="name" placeholder="John Doe" required />
+              <Input id="name" placeholder="John Doe" {...register('name')} />
+              {errors.name && <p className="text-destructive text-xs">{errors.name.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="john@example.com" required />
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@example.com"
+                {...register('email')}
+              />
+              {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" {...register('password')} />
+              {errors.password && (
+                <p className="text-destructive text-xs">{errors.password.message}</p>
+              )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="age">Age</Label>
-                <Input
-                  id="age"
-                  type="number"
-                  min="0"
-                  required
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                />
+            <Button type="submit" className="w-full" disabled={isPending || isGooglePending}>
+              {isPending ? 'Signing up...' : 'Sign Up'}
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="gender">Gender</Label>
-                <Select>
-                  <SelectTrigger id="gender">
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="height">
-                  Height (cm) <span className="text-muted-foreground text-xs">(Optional)</span>
-                </Label>
-                <Input
-                  id="height"
-                  type="number"
-                  min="0"
-                  placeholder="175"
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="weight">
-                  Weight (kg) <span className="text-muted-foreground text-xs">(Optional)</span>
-                </Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  min="0"
-                  placeholder="70"
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                />
-              </div>
-            </div>
-
-            <Button type="submit" className="w-full">
-              Sign Up
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => googleLogin()}
+              disabled={isPending || isGooglePending}
+            >
+              {isGooglePending ? (
+                'Connecting...'
+              ) : (
+                <>
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    aria-hidden="true"
+                    focusable="false"
+                    data-prefix="fab"
+                    data-icon="google"
+                    role="img"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 488 512"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+                    ></path>
+                  </svg>
+                  Sign up with Google
+                </>
+              )}
             </Button>
           </form>
         </CardContent>
