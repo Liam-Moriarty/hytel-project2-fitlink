@@ -1,28 +1,12 @@
 import { FormField, FormItem, FormControl, FormMessage, FormLabel } from '@/components/ui/form'
-import { UseFormReturn } from 'react-hook-form'
 import { OnboardingFormValues } from './schemas'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Role } from './types'
 import { Path, ControllerRenderProps } from 'react-hook-form'
+import { OnBoardStepProps } from '@/interface'
+import { certifications, workoutTypes } from '@/constants'
 
-interface OnBoardStep4Props {
-  role: Role
-  form: UseFormReturn<OnboardingFormValues>
-}
-
-const OnBoardStep4 = ({ role, form }: OnBoardStep4Props) => {
-  const workoutTypes = [
-    'Running',
-    'Cycling',
-    'Swimming',
-    'Weightlifting',
-    'Yoga',
-    'Pilates',
-    'HIIT',
-  ]
-  const certifications = ['ACE', 'NASM', 'ISSA', 'ACSM', 'CrossFit Level 1']
-
+const OnBoardStep4 = ({ role, form }: OnBoardStepProps) => {
   const fieldName = (
     role === 'trainee' ? 'preferredWorkoutTypes' : 'certifications'
   ) as Path<OnboardingFormValues>

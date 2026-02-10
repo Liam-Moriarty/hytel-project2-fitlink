@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
-import { Role } from './types'
 import OnBoardStep1 from './OnBoardStep1'
 import OnBoardStep2 from './OnBoardStep2'
 import OnBoardStep3 from './OnBoardStep3'
@@ -22,6 +21,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { onboardingSchema, OnboardingFormValues } from './schemas'
 import { Form } from '@/components/ui/form'
+import { Role } from '@/interface'
 
 const GetToKnow = () => {
   const navigate = useNavigate()
@@ -144,7 +144,6 @@ const GetToKnow = () => {
 
       await updateUser(user.uid, userData)
 
-      // 2. Create Role Specific Data
       // 2. Create Role Specific Data
       if (role === 'trainee') {
         await createTraineeGoals(user.uid, {

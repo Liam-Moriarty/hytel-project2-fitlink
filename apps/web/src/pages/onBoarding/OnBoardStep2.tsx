@@ -1,6 +1,4 @@
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import { UseFormReturn } from 'react-hook-form'
-import { OnboardingFormValues } from './schemas'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -9,12 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { OnBoardStepProps } from '@/interface'
 
-interface OnBoardStep2Props {
-  form: UseFormReturn<OnboardingFormValues>
-}
-
-const OnBoardStep2 = ({ form }: OnBoardStep2Props) => {
+const OnBoardStep2 = ({ form }: OnBoardStepProps) => {
   return (
     <div className="space-y-4 mt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

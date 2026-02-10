@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Signup from './pages/auth/Signup'
 import Login from './pages/auth/Login'
-import GetToKnow from './pages/onBoarding/GetToKnow'
+import GetToKnow from './pages/onboarding/GetToKnow'
 import { useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'

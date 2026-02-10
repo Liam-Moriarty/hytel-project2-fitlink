@@ -1,17 +1,11 @@
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form'
-import { UseFormReturn } from 'react-hook-form'
 import { OnboardingFormValues } from './schemas'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Role } from './types'
 import { Path, ControllerRenderProps } from 'react-hook-form'
+import { OnBoardStepProps } from '@/interface'
 
-interface OnBoardStep3Props {
-  role: Role
-  form: UseFormReturn<OnboardingFormValues>
-}
-
-const OnBoardStep3 = ({ role, form }: OnBoardStep3Props) => {
+const OnBoardStep3 = ({ role, form }: OnBoardStepProps) => {
   const items =
     role === 'trainee'
       ? ['Weight Loss', 'Muscle Gain', 'Endurance', 'Flexibility', 'General Health']

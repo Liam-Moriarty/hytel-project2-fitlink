@@ -1,15 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import {
-  Home,
-  Users,
-  Calendar,
-  BarChart3,
-  User,
-  LogOut,
-  Dumbbell,
-  ChevronRight,
-  ChevronLeft,
-} from 'lucide-react'
+import { LogOut, Dumbbell, ChevronRight, ChevronLeft } from 'lucide-react'
 import { auth } from '@/lib/firebase'
 import { signOut } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
@@ -25,6 +15,7 @@ import {
 } from '@/components/ui/sidebar'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useSidebar } from '@/components/ui/sidebar'
+import { getAvatarColor, navItemsTrainer } from '@/constants'
 
 const TrainerSidebar = () => {
   const location = useLocation()
@@ -47,38 +38,12 @@ const TrainerSidebar = () => {
     }
   }
 
-  // Generate consistent color based on email
-  const getAvatarColor = (email: string) => {
-    const colors = [
-      { bg: 'bg-red-400', text: 'text-black' },
-      { bg: 'bg-blue-400', text: 'text-black' },
-      { bg: 'bg-green-400', text: 'text-black' },
-      { bg: 'bg-yellow-400', text: 'text-black' },
-      { bg: 'bg-purple-400', text: 'text-black' },
-      { bg: 'bg-pink-400', text: 'text-black' },
-      { bg: 'bg-indigo-400', text: 'text-black' },
-      { bg: 'bg-orange-400', text: 'text-black' },
-      { bg: 'bg-teal-400', text: 'text-black' },
-      { bg: 'bg-cyan-400', text: 'text-black' },
-    ]
-    const charCode = email.charCodeAt(0) || 0
-    return colors[charCode % colors.length]
-  }
-
   const getInitial = (email: string) => {
     return email.charAt(0).toUpperCase() || 'U'
   }
 
   const avatarColor = getAvatarColor(userEmail)
   const initial = getInitial(userEmail)
-
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: Home },
-    { name: 'My Clients', path: '/dashboard/clients', icon: Users },
-    { name: 'Schedule', path: '/dashboard/schedule', icon: Calendar },
-    { name: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
-    { name: 'Profile', path: '/dashboard/profile', icon: User },
-  ]
 
   return (
     <Sidebar collapsible="icon">
@@ -96,7 +61,7 @@ const TrainerSidebar = () => {
 
       <SidebarContent className="bg-background p-4 group-data-[collapsible=icon]:p-2">
         <SidebarMenu>
-          {navItems.map(item => {
+          {navItemsTrainer.map(item => {
             const Icon = item.icon
             const isActive = location.pathname === item.path
 

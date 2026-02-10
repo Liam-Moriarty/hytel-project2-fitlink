@@ -1,12 +1,7 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Role } from './types'
+import { OnBoardStep1Props } from '@/interface'
 import { cn } from '@/lib/utils'
 import { Dumbbell, User } from 'lucide-react'
-
-interface OnBoardStep1Props {
-  role: Role
-  setRole: (role: Role) => void
-}
 
 const OnBoardStep1 = ({ role, setRole }: OnBoardStep1Props) => {
   return (

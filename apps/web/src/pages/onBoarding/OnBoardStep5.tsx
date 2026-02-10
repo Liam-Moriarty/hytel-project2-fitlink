@@ -1,7 +1,4 @@
 import { FormField, FormItem, FormControl, FormMessage, FormLabel } from '@/components/ui/form'
-import { UseFormReturn } from 'react-hook-form'
-import { OnboardingFormValues } from './schemas'
-import { Role } from './types'
 import {
   Select,
   SelectContent,
@@ -10,31 +7,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
+import { OnBoardStepProps } from '@/interface'
+import { frequencyOptions, timelineOptions } from '@/constants'
 
-interface OnBoardStep5Props {
-  role: Role
-  form: UseFormReturn<OnboardingFormValues>
-}
-
-const OnBoardStep5 = ({ role, form }: OnBoardStep5Props) => {
+const OnBoardStep5 = ({ role, form }: OnBoardStepProps) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
-  const frequencyOptions = [
-    { value: '1', label: '1 day per week' },
-    { value: '2', label: '2 days per week' },
-    { value: '3', label: '3 days per week' },
-    { value: '4', label: '4 days per week' },
-    { value: '5', label: '5 days per week' },
-    { value: '6', label: '6 days per week' },
-    { value: '7', label: '7 days per week' },
-  ]
-
-  const timelineOptions = [
-    { value: '1_month', label: '1 Month' },
-    { value: '3_months', label: '3 Months' },
-    { value: '6_months', label: '6 Months' },
-    { value: '1_year', label: '1 Year' },
-  ]
 
   return (
     <div className="mt-6 space-y-6">

@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 import { signUpWithEmail, signInWithEmail, signInWithGoogle, logout } from '@/lib/api/auth'
 import { getUser } from '@/lib/api/user'
 import { useAuthStore } from '@/lib/store/useAuthStore'
-import { useNavigate } from 'react-router-dom'
 import { LoginFormValues, SignupFormValues } from '@/lib/schemas/auth'
+import { useNavigate } from 'react-router-dom'
 
 export const useSignupMutation = () => {
   const navigate = useNavigate()

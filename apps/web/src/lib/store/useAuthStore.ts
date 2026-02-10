@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { User } from 'firebase/auth'
-import { UserData } from '@/lib/api/user'
+import { UserData } from '@/interface'
 
 interface AuthState {
   user: User | null
