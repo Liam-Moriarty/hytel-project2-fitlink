@@ -141,3 +141,28 @@ export interface WeekProgressProps {
   }
   navigate: (path: string) => void
 }
+
+// Trainer Clients Page
+export interface TrainerProfile {
+  userId: string
+  specialties: string[]
+  certifications: string[]
+  availability: string[]
+  traineeIds: string[]
+  createdAt: any
+}
+
+export interface ClientsHeaderProps {
+  clientCount: number
+}
+
+export interface InviteCardProps {
+  trainerId: string
+  existingTraineeIds: string[]
+}
+
+export interface ClientsTableProps {
+  clients: UserData[]
+  trainerId: string
+  isLoading: boolean
+}
