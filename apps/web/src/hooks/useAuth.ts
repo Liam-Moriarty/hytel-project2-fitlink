@@ -17,7 +17,7 @@ export const useSignupMutation = () => {
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
-        navigate('/dashboard')
+        navigate('/dashboard/trainee')
       } else {
         navigate('/onboarding')
       }
@@ -57,7 +57,7 @@ export const useGoogleLoginMutation = () => {
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
-        navigate('/dashboard')
+        navigate('/dashboard/trainee')
       } else {
         navigate('/onboarding')
       }

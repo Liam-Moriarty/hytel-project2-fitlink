@@ -169,7 +169,7 @@ const GetToKnow = () => {
         displayName: user.displayName,
         createdAt: new Date(),
       })
-      navigate('/dashboard')
+      navigate('/dashboard/trainee')
     } catch (error) {
       console.error('Error saving onboarding data:', error)
       alert('Failed to save data. Please try again.')
