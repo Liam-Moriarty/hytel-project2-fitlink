@@ -99,3 +99,45 @@ export interface TopStatsGridProps {
 export interface ProfileUserProps {
   user: UserData
 }
+
+export interface AchievementsProps {
+  achievements: any[]
+  activeAchievements: any[]
+  navigate: (path: string) => void
+}
+
+export interface GoalsOverviewProps {
+  userData: UserData | null
+}
+
+export interface DashboardHeaderProps {
+  userData: UserData | null
+}
+
+export interface MotivationCardProps {
+  totalCompleted: number
+  totalBurned: number
+  completionPercentage: number
+}
+
+export interface TodayWorkoutProps {
+  todayWorkout: any | null
+  navigate: (path: string) => void
+}
+
+export interface TopStatsGridProps {
+  completionPercentage: number
+  totalCompleted: number
+  totalWorkouts: number
+  totalBurned: number
+}
+
+export interface WeekProgressProps {
+  currentWeekProgress: {
+    weekNumber: number
+    completed: number
+    total: number
+    percentage: number
+  }
+  navigate: (path: string) => void
+}
