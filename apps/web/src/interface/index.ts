@@ -181,3 +181,19 @@ export interface CertificationsCardProps {
   trainerId: string
   certifications: string[]
 }
+
+// Trainer Profile Page
+export interface TrainerOverviewProps {
+  clientCount: number
+  certificationsCount: number
+  availableDaysCount: number
+}
+
+export interface TrainerSpecialtiesProps {
+  trainerId: string
+  specialties: string[]
+}
+
+export interface TrainerSettingsCardProps {
+  user: UserData
+}

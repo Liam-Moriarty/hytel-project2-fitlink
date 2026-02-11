@@ -17,3 +17,19 @@ export const certificationsSchema = z.object({
 })
 
 export type CertificationsFormValues = z.infer<typeof certificationsSchema>
+
+export const trainerPersonalInfoSchema = z.object({
+  age: z.string().min(1, 'Age is required'),
+  gender: z.enum(['male', 'female', 'other']),
+  height: z.string().min(1, 'Height is required'),
+  weight: z.string().min(1, 'Weight is required'),
+  activityLevel: z.enum(['sedentary', 'light', 'moderate', 'high']),
+})
+
+export type TrainerPersonalInfoValues = z.infer<typeof trainerPersonalInfoSchema>
+
+export const specialtiesSchema = z.object({
+  specialties: z.array(z.string()).min(1, 'Please select at least one specialty'),
+})
+
+export type SpecialtiesFormValues = z.infer<typeof specialtiesSchema>
