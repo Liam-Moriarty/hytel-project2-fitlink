@@ -1,4 +1,18 @@
-import { Home, TrendingUp, User, Dumbbell, Users, Calendar, BarChart3 } from 'lucide-react'
+import {
+  Home,
+  TrendingUp,
+  User,
+  Dumbbell,
+  Users,
+  Calendar,
+  BarChart3,
+  Trophy,
+  Zap,
+  Medal,
+  Flame,
+  Target,
+  Award,
+} from 'lucide-react'
 
 // Generate consistent color based on email
 export const getAvatarColor = (email: string) => {
@@ -59,4 +73,84 @@ export const timelineOptions = [
   { value: '3 months', label: '3 Months' },
   { value: '6 months', label: '6 Months' },
   { value: '1 year', label: '1 Year' },
+]
+
+export const getAchievements = (totalCompleted: number) => [
+  {
+    title: 'First Week',
+    desc: 'Complete week 1',
+    icon: Flame,
+    color: 'text-orange-500',
+    bg: 'bg-orange-100',
+    active: true,
+  },
+  {
+    title: '10 Workouts',
+    desc: 'Complete 10 sessions',
+    icon: Dumbbell,
+    color: 'text-amber-600',
+    bg: 'bg-amber-100',
+    active: true,
+  },
+  {
+    title: 'Week Streak',
+    desc: '7 days in a row',
+    icon: Zap,
+    color: 'text-yellow-500',
+    bg: 'bg-yellow-100',
+    active: true,
+  },
+  {
+    title: '20 Workouts',
+    desc: 'Consistency key',
+    icon: Target,
+    color: 'text-blue-500',
+    bg: 'bg-blue-100',
+    active: totalCompleted >= 20,
+  },
+  {
+    title: '30 Workouts',
+    desc: 'On fire!',
+    icon: Trophy,
+    color: 'text-purple-500',
+    bg: 'bg-slate-100',
+    active: totalCompleted >= 30,
+    grayscale: true,
+  },
+  {
+    title: 'Month Streak',
+    desc: '30 days consistency',
+    icon: Medal,
+    color: 'text-emerald-500',
+    bg: 'bg-slate-100',
+    active: false,
+    grayscale: true,
+  },
+  {
+    title: '50 Workouts',
+    desc: 'Half century',
+    icon: Award,
+    color: 'text-indigo-500',
+    bg: 'bg-slate-100',
+    active: false,
+    grayscale: true,
+  },
+  {
+    title: '100 Workouts',
+    desc: 'Century club',
+    icon: Award,
+    color: 'text-pink-500',
+    bg: 'bg-slate-100',
+    active: false,
+    grayscale: true,
+  },
+  {
+    title: 'Consistency',
+    desc: 'Worked out every day',
+    icon: Calendar,
+    color: 'text-cyan-500',
+    bg: 'bg-slate-100',
+    active: false,
+    grayscale: true,
+  },
 ]
