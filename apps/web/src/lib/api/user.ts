@@ -11,8 +11,6 @@ export const getFullUser = async (uid: string): Promise<UserData | null> => {
 
   const userData = userSnap.data()
 
-  // Only attempt to fetch goals if they are a Trainee
-  // (Or just fetch anyway—if it's not there, it returns null)
   let traineeData = null
 
   if (userData.role === 'trainee') {

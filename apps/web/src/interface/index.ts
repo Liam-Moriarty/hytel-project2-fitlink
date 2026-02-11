@@ -197,3 +197,27 @@ export interface TrainerSpecialtiesProps {
 export interface TrainerSettingsCardProps {
   user: UserData
 }
+
+// Trainer Analytics Page
+export interface WeeklyCalorieData {
+  weekNumber: number
+  caloriesBurned: number
+  workoutsCompleted: number
+}
+
+export interface TraineeAnalytics {
+  userId: string
+  userName: string
+  email: string
+  weeklyCalories: WeeklyCalorieData[]
+  totalCaloriesBurned: number
+  totalWorkoutsCompleted: number
+  progressPercentage: number
+  currentWeek: number
+  targetTimeline?: string
+}
+
+export interface AnalyticsChartData {
+  week: number
+  [traineeId: string]: number | string
+}

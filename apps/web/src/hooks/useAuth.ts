@@ -37,7 +37,7 @@ export const useLoginMutation = () => {
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
-        navigate('/dashboard')
+        navigate('/dashboard/trainee')
       } else {
         navigate('/onboarding')
       }
