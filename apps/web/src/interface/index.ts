@@ -45,3 +45,22 @@ export interface OnBoardStepProps {
   role?: Role
   form: UseFormReturn<OnboardingFormValues>
 }
+
+export interface HeaderProps {
+  userData: UserData | null
+  progressPercentage: number
+  completedCount: number
+  totalWorkouts: number
+}
+
+export interface GoalsCardProps {
+  userData: UserData | null
+}
+
+export interface FooterProps {
+  userData: UserData | null
+}
+
+export interface DietaryPlanProps {
+  workoutPlan: any
+}
