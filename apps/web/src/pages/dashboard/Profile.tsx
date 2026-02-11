@@ -39,7 +39,7 @@ const Profile = () => {
   const traineeGoals = user.traineeGoals || {}
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6 mx-auto max-w-7xl">
       {/* Header Section */}
       <div className="relative overflow-hidden rounded-xl bg-background p-8 shadow-lg">
         <div className="relative z-10 flex items-center gap-6">

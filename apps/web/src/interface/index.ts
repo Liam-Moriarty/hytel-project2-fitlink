@@ -64,3 +64,34 @@ export interface FooterProps {
 export interface DietaryPlanProps {
   workoutPlan: any
 }
+
+export interface AchievementsProps {
+  achievements: any[]
+}
+
+export interface WeeklyProgress {
+  week: string
+  weekNumber: number
+  total: number
+  completed: number
+  percentage: number
+}
+
+export interface WeeklyActivityProps {
+  weeklyProgress: WeeklyProgress[]
+  currentPage: number
+  totalPages: number
+  currentWeeks: WeeklyProgress[]
+  startIndex: number
+  totalCompleted: number
+  handlePrevPage: () => void
+  handleNextPage: () => void
+  itemsPerPage: number
+}
+
+export interface TopStatsGridProps {
+  completionPercentage: number
+  totalCompleted: number
+  totalBurned: number
+  targetTimeline?: string
+}
