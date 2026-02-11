@@ -6,7 +6,7 @@ import { getFullUser } from '@/lib/api/user'
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
 import { Activity, Bell, LogOut, Ruler, Settings, Target, User, Weight, Clock } from 'lucide-react'
-import { EditProfileSheet } from './components/EditProfileSheet'
+import { EditProfileSheet } from '../../components/EditProfileSheet'
 import { useLogoutMutation } from '@/hooks/useAuth'
 
 const Profile = () => {
@@ -225,7 +225,6 @@ const Profile = () => {
           </Card>
 
           {/* Additional Goals */}
-          {/* {traineeGoals.goals?.length > 0 ? traineeGoals.goals[0].join(', ') : 'Not set'} */}
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">Additional Goals</CardTitle>
