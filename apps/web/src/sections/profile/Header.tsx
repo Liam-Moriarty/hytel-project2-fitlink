@@ -21,7 +21,9 @@ const Header = ({ user }: HeaderProps) => {
           )}
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">{user.displayName || 'User'}</h1>
+          <h1 className="text-3xl font-bold text-foreground capitalize">
+            {user.displayName || 'User'}
+          </h1>
           <p className="opacity-90 text-foreground">{user.email}</p>
           <div className="mt-2 flex gap-2">
             <Badge
