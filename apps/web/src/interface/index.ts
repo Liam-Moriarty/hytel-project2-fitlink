@@ -95,3 +95,7 @@ export interface TopStatsGridProps {
   totalBurned: number
   targetTimeline?: string
 }
+
+export interface ProfileUserProps {
+  user: UserData
+}
