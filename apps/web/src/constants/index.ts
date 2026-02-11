@@ -58,6 +58,16 @@ export const workoutTypes = [
 ]
 export const certifications = ['ACE', 'NASM', 'ISSA', 'ACSM', 'CrossFit Level 1']
 
+export const daysOfWeek = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+]
+
 export const frequencyOptions = [
   { value: '1', label: '1 day per week' },
   { value: '2', label: '2 days per week' },

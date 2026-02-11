@@ -166,3 +166,18 @@ export interface ClientsTableProps {
   trainerId: string
   isLoading: boolean
 }
+
+// Trainer Schedule Page
+export interface ScheduleHeaderProps {
+  availableDaysCount: number
+}
+
+export interface AvailabilityCardProps {
+  trainerId: string
+  availability: string[]
+}
+
+export interface CertificationsCardProps {
+  trainerId: string
+  certifications: string[]
+}

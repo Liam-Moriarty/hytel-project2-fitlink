@@ -71,3 +71,11 @@ export const removeTraineeFromTrainer = async (trainerId: string, traineeId: str
     traineeIds: arrayRemove(traineeId),
   })
 }
+
+export const updateTrainerProfile = async (
+  trainerId: string,
+  data: Partial<Pick<TrainerProfile, 'availability' | 'certifications' | 'specialties'>>
+) => {
+  const trainerRef = doc(db, 'trainers', trainerId)
+  await updateDoc(trainerRef, data)
+}
