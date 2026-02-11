@@ -33,18 +33,18 @@ export const getAvatarColor = (email: string) => {
 }
 
 export const navItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: Home },
-  { name: 'Workout Plan', path: '/dashboard/workout-plan', icon: Dumbbell },
-  { name: 'Progress', path: '/dashboard/progress', icon: TrendingUp },
-  { name: 'Profile', path: '/dashboard/profile', icon: User },
+  { name: 'Dashboard', path: '/dashboard/trainee', icon: Home },
+  { name: 'Workout Plan', path: '/dashboard/trainee/workout-plan', icon: Dumbbell },
+  { name: 'Progress', path: '/dashboard/trainee/progress', icon: TrendingUp },
+  { name: 'Profile', path: '/dashboard/trainee/profile', icon: User },
 ]
 
 export const navItemsTrainer = [
-  { name: 'Dashboard', path: '/dashboard', icon: Home },
-  { name: 'My Clients', path: '/dashboard/clients', icon: Users },
-  { name: 'Schedule', path: '/dashboard/schedule', icon: Calendar },
-  { name: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
-  { name: 'Profile', path: '/dashboard/profile', icon: User },
+  { name: 'Dashboard', path: '/dashboard/trainer', icon: Home },
+  { name: 'My Clients', path: '/dashboard/trainer/clients', icon: Users },
+  { name: 'Schedule', path: '/dashboard/trainer/schedule', icon: Calendar },
+  { name: 'Analytics', path: '/dashboard/trainer/analytics', icon: BarChart3 },
+  { name: 'Profile', path: '/dashboard/trainer/profile', icon: User },
 ]
 
 export const workoutTypes = [

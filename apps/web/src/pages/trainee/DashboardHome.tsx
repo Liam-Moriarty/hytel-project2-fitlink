@@ -9,13 +9,13 @@ import { getAchievements } from '@/constants'
 import { useNavigate } from 'react-router-dom'
 
 // Section Components
-import Header from '@/sections/dashboard/Header'
-import TopStatsGrid from '@/sections/dashboard/TopStatsGrid'
-import TodayWorkout from '@/sections/dashboard/TodayWorkout'
-import WeekProgress from '@/sections/dashboard/WeekProgress'
-import GoalsOverview from '@/sections/dashboard/GoalsOverview'
-import Achievements from '@/sections/dashboard/Achievements'
-import MotivationCard from '@/sections/dashboard/MotivationCard'
+import Header from '@/sections/trainee/dashboard/Header'
+import TraineeTopStatsGrid from '@/sections/trainee/dashboard/TraineeTopStatsGrid'
+import TodayWorkout from '@/sections/trainee/dashboard/TodayWorkout'
+import WeekProgress from '@/sections/trainee/dashboard/WeekProgress'
+import GoalsOverview from '@/sections/trainee/dashboard/GoalsOverview'
+import Achievements from '@/sections/trainee/dashboard/TraineeAchievements'
+import MotivationCard from '@/sections/trainee/dashboard/MotivationCard'
 
 const DashboardHome = () => {
   const auth = getAuth()
@@ -116,7 +116,7 @@ const DashboardHome = () => {
     <div className="container mx-auto p-4 space-y-8 max-w-7xl">
       <Header userData={userData ?? null} />
 
-      <TopStatsGrid
+      <TraineeTopStatsGrid
         completionPercentage={completionPercentage}
         totalCompleted={totalCompleted}
         totalWorkouts={totalWorkouts}

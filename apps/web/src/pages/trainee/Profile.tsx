@@ -4,13 +4,13 @@ import { useAuthStore } from '@/lib/store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
 
 // Section Components
-import Header from '@/sections/profile/Header'
-import CurrentGoals from '@/sections/profile/CurrentGoals'
-import PersonalInfo from '@/sections/profile/PersonalInfo'
-import WorkoutPreferences from '@/sections/profile/WorkoutPreferences'
-import SettingsCard from '@/sections/profile/SettingsCard'
-import AdditionalGoals from '@/sections/profile/AdditionalGoals'
-import LogoutButton from '@/sections/profile/LogoutButton'
+import Header from '@/sections/trainee/profile/Header'
+import CurrentGoals from '@/sections/trainee/profile/CurrentGoals'
+import PersonalInfo from '@/sections/trainee/profile/PersonalInfo'
+import WorkoutPreferences from '@/sections/trainee/profile/WorkoutPreferences'
+import SettingsCard from '@/sections/trainee/profile/SettingsCard'
+import AdditionalGoals from '@/sections/trainee/profile/AdditionalGoals'
+import LogoutButton from '@/sections/trainee/profile/LogoutButton'
 
 const Profile = () => {
   const { userData } = useAuthStore()

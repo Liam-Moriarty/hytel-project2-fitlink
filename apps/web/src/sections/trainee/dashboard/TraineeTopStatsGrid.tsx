@@ -1,14 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { TopStatsGridProps } from '@/interface'
+import { DashboardTopStatsGridProps } from '@/interface'
 import { Activity, Dumbbell, Flame, Target, TrendingUp, Trophy } from 'lucide-react'
 
-const TopStatsGrid = ({
+const TraineeTopStatsGrid = ({
   completionPercentage,
   totalCompleted,
   totalWorkouts,
   totalBurned,
-}: TopStatsGridProps) => {
+}: DashboardTopStatsGridProps) => {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Overall Progress */}
@@ -85,4 +85,4 @@ const TopStatsGrid = ({
   )
 }
 
-export default TopStatsGrid
+export default TraineeTopStatsGrid

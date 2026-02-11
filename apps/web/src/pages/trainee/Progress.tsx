@@ -9,11 +9,11 @@ import { UserData } from '@/interface'
 import { getAchievements } from '@/constants'
 
 // Section Components
-import Header from '@/sections/progress/Header'
-import TopStatsGrid from '@/sections/progress/TopStatsGrid'
-import WeeklyActivity from '@/sections/progress/WeeklyActivity'
-import BodyMeasurements from '@/sections/progress/BodyMeasurements'
-import Achievements from '@/sections/progress/Achievements'
+import Header from '@/sections/trainee/progress/Header'
+import WeeklyActivity from '@/sections/trainee/progress/WeeklyActivity'
+import BodyMeasurements from '@/sections/trainee/progress/BodyMeasurements'
+import TopStatsGrid from '@/sections/trainee/progress/TopStatsGrid'
+import Achievements from '@/sections/trainee/progress/Achievements'
 
 const ITEMS_PER_PAGE = 5
 

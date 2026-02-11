@@ -8,13 +8,15 @@ import { auth } from '@/lib/firebase'
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { getFullUser } from '@/lib/api/user'
 import Dashboard from './pages/dashboard/Dashboard'
-import DashboardHome from './pages/dashboard/DashboardHome'
-import WorkoutPlan from './pages/dashboard/WorkoutPlan'
-import Progress from './pages/dashboard/Progress'
-import Profile from './pages/dashboard/Profile'
-import Clients from './pages/dashboard/Clients'
-import Schedule from './pages/dashboard/Schedule'
-import Analytics from './pages/dashboard/Analytics'
+import DashboardHome from './pages/trainee/DashboardHome'
+import WorkoutPlan from './pages/trainee/WorkoutPlan'
+import Progress from './pages/trainee/Progress'
+import Profile from './pages/trainee/Profile'
+import Clients from './pages/trainer/Clients'
+import Schedule from './pages/trainer/Schedule'
+import Analytics from './pages/trainer/Analytics'
+import TrainerDashboard from './pages/trainer/TrainerDashboard'
+import TrainerProfile from './pages/trainer/TrainerProfile'
 
 const App = () => {
   const { setUser, setUserData, setLoading, loading } = useAuthStore()
@@ -44,17 +46,24 @@ const App = () => {
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
         <Route path="/onboarding" element={<GetToKnow />} />
-        <Route path="/dashboard" element={<Dashboard />}>
+
+        <Route path="/dashboard/trainee" element={<Dashboard />}>
           <Route index element={<DashboardHome />} />
           <Route path="workout-plan" element={<WorkoutPlan />} />
           <Route path="progress" element={<Progress />} />
           <Route path="profile" element={<Profile />} />
+        </Route>
+
+        <Route path="/dashboard/trainer" element={<Dashboard />}>
+          <Route index element={<TrainerDashboard />} />
           <Route path="clients" element={<Clients />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="profile" element={<TrainerProfile />} />
         </Route>
-        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   )

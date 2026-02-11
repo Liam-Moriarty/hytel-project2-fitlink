@@ -8,11 +8,11 @@ import { useState, useEffect } from 'react'
 import { UserData } from '@/interface'
 
 // Section Components
-import Header from '@/sections/workout-plan/Header'
-import GoalsCard from '@/sections/workout-plan/GoalsCard'
-import WorkoutTabs from '@/sections/workout-plan/WorkoutTabs'
-import DietaryPlan from '@/sections/workout-plan/DietaryPlan'
-import Footer from '@/sections/workout-plan/Footer'
+import Header from '@/sections/trainee/workout-plan/Header'
+import GoalsCard from '@/sections/trainee/workout-plan/GoalsCard'
+import WorkoutTabs from '@/sections/trainee/workout-plan/WorkoutTabs'
+import DietaryPlan from '@/sections/trainee/workout-plan/DietaryPlan'
+import Footer from '@/sections/trainee/workout-plan/Footer'
 
 const WorkoutPlan = () => {
   const auth = getAuth()

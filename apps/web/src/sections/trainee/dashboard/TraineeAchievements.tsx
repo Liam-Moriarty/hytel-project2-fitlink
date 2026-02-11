@@ -2,9 +2,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Award, Trophy } from 'lucide-react'
-import { AchievementsProps } from '@/interface'
+import { DashboardAchievementsProps } from '@/interface'
 
-const Achievements = ({ achievements, activeAchievements, navigate }: AchievementsProps) => {
+const TraineeAchievements = ({
+  achievements,
+  activeAchievements,
+  navigate,
+}: DashboardAchievementsProps) => {
   return (
     <Card className="shadow-md">
       <CardHeader>
@@ -51,4 +55,4 @@ const Achievements = ({ achievements, activeAchievements, navigate }: Achievemen
   )
 }
 
-export default Achievements
+export default TraineeAchievements

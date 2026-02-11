@@ -100,7 +100,7 @@ export interface ProfileUserProps {
   user: UserData
 }
 
-export interface AchievementsProps {
+export interface DashboardAchievementsProps {
   achievements: any[]
   activeAchievements: any[]
   navigate: (path: string) => void
@@ -125,7 +125,7 @@ export interface TodayWorkoutProps {
   navigate: (path: string) => void
 }
 
-export interface TopStatsGridProps {
+export interface DashboardTopStatsGridProps {
   completionPercentage: number
   totalCompleted: number
   totalWorkouts: number
