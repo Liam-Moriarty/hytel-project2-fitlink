@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import TrainerHeader from '@/sections/trainer/dashboard/TrainerHeader'
 import TrainerStatsGrid from '@/sections/trainer/dashboard/TrainerStatsGrid'
 import ClientProgressSummary from '@/sections/trainer/dashboard/ClientProgressSummary'
+import DietaryProgressSummary from '@/sections/trainer/dashboard/DietaryProgressSummary'
 import ScheduleOverview from '@/sections/trainer/dashboard/ScheduleOverview'
 import QuickActions from '@/sections/trainer/dashboard/QuickActions'
 
@@ -25,6 +26,7 @@ const TrainerDashboard = () => {
     queryKey: ['trainerProfile', currentUser?.uid],
     queryFn: () => (currentUser ? getTrainerProfile(currentUser.uid) : null),
     enabled: !!currentUser,
+    refetchInterval: 5000, // Real-time updates every 5 seconds
   })
 
   // Fetch trainer's clients
@@ -32,6 +34,7 @@ const TrainerDashboard = () => {
     queryKey: ['trainerClients', trainerProfile?.traineeIds],
     queryFn: () => (trainerProfile ? getTrainerClients(trainerProfile.traineeIds) : []),
     enabled: !!trainerProfile?.traineeIds && trainerProfile.traineeIds.length > 0,
+    refetchInterval: 5000, // Real-time updates every 5 seconds
   })
 
   // Fetch full data for ALL clients (users + goals) to generate analytics
@@ -68,6 +71,7 @@ const TrainerDashboard = () => {
       return results.filter(data => data !== null) as UserData[]
     },
     enabled: clients.length > 0,
+    refetchInterval: 5000, // Real-time updates every 5 seconds
   })
 
   // Generate analytics dataset
@@ -105,6 +109,7 @@ const TrainerDashboard = () => {
       return snap.exists() ? (snap.data() as UserData) : null
     },
     enabled: !!currentUser,
+    refetchInterval: 5000, // Real-time updates every 5 seconds
   })
 
   const isLoading = isLoadingProfile || isLoadingClients || isLoadingAnalytics
@@ -129,9 +134,10 @@ const TrainerDashboard = () => {
       />
 
       <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
-        {/* Left Column: Client Progress */}
+        {/* Left Column: Client Progress & Dietary Progress */}
         <div className="lg:col-span-2 space-y-6">
           <ClientProgressSummary clients={analyticsData} navigate={navigate} />
+          <DietaryProgressSummary clients={analyticsData} navigate={navigate} />
         </div>
 
         {/* Right Column: Schedule & Quick Actions */}
