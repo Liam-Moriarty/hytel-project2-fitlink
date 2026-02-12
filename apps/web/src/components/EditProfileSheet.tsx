@@ -25,7 +25,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { UserData } from '@/interface'
-import { onboardingSchema, OnboardingFormValues } from '@/pages/onboarding/schemas'
+import { onboardingSchema, OnboardingFormValues } from '../pages/onboarding/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Edit } from 'lucide-react'
