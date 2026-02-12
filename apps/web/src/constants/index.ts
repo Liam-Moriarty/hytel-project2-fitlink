@@ -12,6 +12,7 @@ import {
   Flame,
   Target,
   Award,
+  Apple,
 } from 'lucide-react'
 
 // Generate consistent color based on email
@@ -35,6 +36,7 @@ export const getAvatarColor = (email: string) => {
 export const navItems = [
   { name: 'Dashboard', path: '/dashboard/trainee', icon: Home },
   { name: 'Workout Plan', path: '/dashboard/trainee/workout-plan', icon: Dumbbell },
+  { name: 'Dietary Plan', path: '/dashboard/trainee/dietary-plan', icon: Apple },
   { name: 'Progress', path: '/dashboard/trainee/progress', icon: TrendingUp },
   { name: 'Profile', path: '/dashboard/trainee/profile', icon: User },
 ]

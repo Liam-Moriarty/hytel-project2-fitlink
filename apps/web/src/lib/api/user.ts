@@ -40,6 +40,7 @@ export const createTraineeGoals = async (userId: string, data: any) => {
     userId,
     ...data,
     completedWorkouts: [], // Initialize empty completed workouts
+    completedMeals: [], // Initialize empty completed meals
     createdAt: new Date(),
   })
 }

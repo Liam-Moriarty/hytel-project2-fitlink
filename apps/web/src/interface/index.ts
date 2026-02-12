@@ -215,9 +215,83 @@ export interface TraineeAnalytics {
   progressPercentage: number
   currentWeek: number
   targetTimeline?: string
+  // Dietary tracking fields
+  totalMealDaysCompleted: number
+  totalMealDays: number
+  dietaryAdherencePercentage: number
+  avgDailyCalories: number
 }
 
 export interface AnalyticsChartData {
   week: number
   [traineeId: string]: number | string
+}
+
+// ---------- Dietary Plan Page Interfaces ----------
+
+export interface DietaryHeaderProps {
+  userData: UserData | null
+  progressPercentage: number
+  completedCount: number
+  totalMealDays: number
+}
+
+export interface DietaryGoalsCardProps {
+  userData: UserData | null
+  dailyIntakeGoal: number
+  totalWeeks: number
+}
+
+export interface MealPlanTabsProps {
+  workoutPlan: any
+  completedMeals: Set<string>
+  toggleMealCompletion: (weekNum: number, dayNum: number) => void
+}
+
+export interface DietaryInsightsCardProps {
+  completedMeals: Set<string>
+  workoutPlan: any
+}
+
+export interface DietaryFooterProps {
+  userData: UserData | null
+}
+
+// ---------- Dietary Progress Interfaces ----------
+
+export interface DietaryStatsCardProps {
+  totalMealDays: number
+  completedMealDays: number
+  adherencePercentage: number
+  avgDailyCalories: number
+  currentStreak: number
+}
+
+export interface WeeklyDietaryProgress {
+  week: string
+  weekNumber: number
+  total: number
+  completed: number
+  percentage: number
+}
+
+export interface WeeklyDietaryActivityProps {
+  weeklyProgress: WeeklyDietaryProgress[]
+  currentPage: number
+  totalPages: number
+  currentWeeks: WeeklyDietaryProgress[]
+  startIndex: number
+  totalCompleted: number
+  handlePrevPage: () => void
+  handleNextPage: () => void
+  itemsPerPage: number
+}
+
+export interface DietarySummaryCardProps {
+  adherencePercentage: number
+  completedMealDays: number
+  totalMealDays: number
+  currentWeekCompleted: number
+  currentWeekTotal: number
+  navigate: (path: string) => void
 }

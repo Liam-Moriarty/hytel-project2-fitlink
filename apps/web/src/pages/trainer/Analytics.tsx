@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
-import { Activity, TrendingUp, Target, Flame } from 'lucide-react'
+import { Activity, TrendingUp, Target, Flame, UtensilsCrossed } from 'lucide-react'
 import { TraineeAnalytics, AnalyticsChartData, UserData } from '@/interface'
 
 const CHART_COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))']
@@ -142,6 +142,7 @@ const Analytics = () => {
         totalCalories: 0,
         avgProgress: 0,
         maxCurrentWeek: 0,
+        avgDietaryAdherence: 0,
       }
     }
 
@@ -152,6 +153,10 @@ const Analytics = () => {
         analyticsData.reduce((sum, t) => sum + t.progressPercentage, 0) / analyticsData.length
       ),
       maxCurrentWeek: Math.max(...analyticsData.map(t => t.currentWeek)),
+      avgDietaryAdherence: Math.round(
+        analyticsData.reduce((sum, t) => sum + t.dietaryAdherencePercentage, 0) /
+          analyticsData.length
+      ),
     }
   }, [analyticsData])
 
@@ -260,6 +265,17 @@ const Analytics = () => {
               <p className="text-xs text-muted-foreground">Latest active week</p>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Dietary Adherence</CardTitle>
+              <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{aggregateStats.avgDietaryAdherence}%</div>
+              <p className="text-xs text-muted-foreground">Average adherence</p>
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -362,6 +378,18 @@ const Analytics = () => {
                     <p className="text-sm text-muted-foreground">Timeline</p>
                     <p className="text-lg font-semibold">
                       {trainee.targetTimeline?.replace('_', ' ') || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Dietary Adherence</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {trainee.dietaryAdherencePercentage}%
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Meals Completed</p>
+                    <p className="text-2xl font-bold">
+                      {trainee.totalMealDaysCompleted}/{trainee.totalMealDays}
                     </p>
                   </div>
                 </div>

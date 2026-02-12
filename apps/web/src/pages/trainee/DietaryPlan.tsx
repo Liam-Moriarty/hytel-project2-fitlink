@@ -6,32 +6,33 @@ import { month6TraineeWorkoutPlan } from '@/constants/month6TraineeWorkoutPlan'
 import { useState, useEffect } from 'react'
 
 // Section Components
-import Header from '@/sections/trainee/workout-plan/Header'
-import GoalsCard from '@/sections/trainee/workout-plan/GoalsCard'
-import WorkoutTabs from '@/sections/trainee/workout-plan/WorkoutTabs'
-import Footer from '@/sections/trainee/workout-plan/Footer'
+import Header from '@/sections/trainee/dietary-plan/Header'
+import GoalsCard from '@/sections/trainee/dietary-plan/GoalsCard'
+import MealPlanTabs from '@/sections/trainee/dietary-plan/MealPlanTabs'
+import InsightsCard from '@/sections/trainee/dietary-plan/InsightsCard'
+import Footer from '@/sections/trainee/dietary-plan/Footer'
 
-const WorkoutPlan = () => {
+const DietaryPlan = () => {
   const auth = getAuth()
   const currentUser = auth.currentUser
 
   const { data: userData, isLoading } = useCurrentUser()
 
   const { mutate: updateGoals } = useUpdateTraineeGoals(currentUser?.uid ?? '')
-  const [completedWorkouts, setCompletedWorkouts] = useState<Set<string>>(new Set())
+  const [completedMeals, setCompletedMeals] = useState<Set<string>>(new Set())
 
   // Sync state with user data when loaded
   useEffect(() => {
-    if (userData?.traineeGoals?.completedWorkouts) {
-      setCompletedWorkouts(new Set(userData.traineeGoals.completedWorkouts))
+    if (userData?.traineeGoals?.completedMeals) {
+      setCompletedMeals(new Set(userData.traineeGoals.completedMeals))
     }
   }, [userData])
 
-  const toggleWorkoutCompletion = (weekNum: number, dayNum: number) => {
+  const toggleMealCompletion = (weekNum: number, dayNum: number) => {
     if (!currentUser) return // Guard clause
 
     const key = `${weekNum}-${dayNum}`
-    const newSet = new Set(completedWorkouts)
+    const newSet = new Set(completedMeals)
 
     if (newSet.has(key)) {
       newSet.delete(key)
@@ -39,8 +40,8 @@ const WorkoutPlan = () => {
       newSet.add(key)
     }
 
-    setCompletedWorkouts(newSet) // Optimistic update
-    updateGoals({ completedWorkouts: Array.from(newSet) })
+    setCompletedMeals(newSet) // Optimistic update
+    updateGoals({ completedMeals: Array.from(newSet) })
   }
 
   if (isLoading) {
@@ -62,13 +63,16 @@ const WorkoutPlan = () => {
 
   const currentWorkoutPlan = getWorkoutPlan()
 
-  // Calculate progress
-  const totalWorkouts = currentWorkoutPlan.workoutPlan.reduce(
-    (acc, week) => acc + week.schedule.length,
-    0
-  )
-  const completedCount = completedWorkouts.size
-  const progressPercentage = Math.round((completedCount / totalWorkouts) * 100)
+  // Calculate progress for dietary plan
+  const totalMealDays =
+    currentWorkoutPlan.dietaryPlan?.reduce((acc, week) => acc + week.days.length, 0) || 0
+  const completedCount = completedMeals.size
+  const progressPercentage =
+    totalMealDays > 0 ? Math.round((completedCount / totalMealDays) * 100) : 0
+
+  // Get dietary plan metadata
+  const dailyIntakeGoal = currentWorkoutPlan.dietaryPlan?.[0]?.dailyIntakeGoal || 2200
+  const totalWeeks = currentWorkoutPlan.dietaryPlan?.length || 0
 
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-7xl">
@@ -76,15 +80,21 @@ const WorkoutPlan = () => {
         userData={userData ?? null}
         progressPercentage={progressPercentage}
         completedCount={completedCount}
-        totalWorkouts={totalWorkouts}
+        totalMealDays={totalMealDays}
       />
 
-      <GoalsCard userData={userData ?? null} />
+      <GoalsCard
+        userData={userData ?? null}
+        dailyIntakeGoal={dailyIntakeGoal}
+        totalWeeks={totalWeeks}
+      />
 
-      <WorkoutTabs
+      <InsightsCard completedMeals={completedMeals} workoutPlan={currentWorkoutPlan} />
+
+      <MealPlanTabs
         workoutPlan={currentWorkoutPlan}
-        completedWorkouts={completedWorkouts}
-        toggleWorkoutCompletion={toggleWorkoutCompletion}
+        completedMeals={completedMeals}
+        toggleMealCompletion={toggleMealCompletion}
       />
 
       <Footer userData={userData ?? null} />
@@ -92,4 +102,4 @@ const WorkoutPlan = () => {
   )
 }
 
-export default WorkoutPlan
+export default DietaryPlan

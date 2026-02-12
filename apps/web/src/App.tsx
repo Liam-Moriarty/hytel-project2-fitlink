@@ -21,6 +21,7 @@ import TrainerProfile from './pages/trainer/TrainerProfile'
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { getFullUser, userKeys } from '@/lib/api/user'
 import { queryClient } from '@/lib/queryClient'
+import DietaryPlan from './pages/trainee/DietaryPlan'
 
 const App = () => {
   const { setUser, setUserData, setLoading, loading } = useAuthStore()
@@ -62,6 +63,7 @@ const App = () => {
         <Route path="/dashboard/trainee" element={<Dashboard />}>
           <Route index element={<DashboardHome />} />
           <Route path="workout-plan" element={<WorkoutPlan />} />
+          <Route path="dietary-plan" element={<DietaryPlan />} />
           <Route path="progress" element={<Progress />} />
           <Route path="profile" element={<Profile />} />
         </Route>

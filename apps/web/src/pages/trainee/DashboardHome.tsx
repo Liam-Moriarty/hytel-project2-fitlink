@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCurrentUser } from '@/hooks/useUser'
 import { month1TraineeWorkoutPlan } from '@/constants/month1TraineeWorkoutPlan'
 import { month3TraineeWorkoutPlan } from '@/constants/month3TraineeWorkoutPlan'
@@ -13,6 +14,7 @@ import WeekProgress from '@/sections/trainee/dashboard/WeekProgress'
 import GoalsOverview from '@/sections/trainee/dashboard/GoalsOverview'
 import Achievements from '@/sections/trainee/dashboard/TraineeAchievements'
 import MotivationCard from '@/sections/trainee/dashboard/MotivationCard'
+import DietarySummaryCard from '@/sections/trainee/dashboard/DietarySummaryCard'
 
 const DashboardHome = () => {
   const navigate = useNavigate()
@@ -103,6 +105,39 @@ const DashboardHome = () => {
   const achievements = getAchievements(totalCompleted)
   const activeAchievements = achievements.filter(a => a.active)
 
+  // Dietary Progress Calculations
+  const completedMeals = new Set(userData?.traineeGoals?.completedMeals || [])
+  const totalMealDays =
+    currentWorkoutPlan.dietaryPlan?.reduce((acc: number, week: any) => acc + week.days.length, 0) ||
+    0
+
+  let completedMealDayCount = 0
+  currentWorkoutPlan.dietaryPlan?.forEach((week: any) => {
+    week.days.forEach((day: any) => {
+      const key = `${week.weekNumber}-${day.day}`
+      if (completedMeals.has(key)) {
+        completedMealDayCount++
+      }
+    })
+  })
+
+  const dietaryAdherencePercentage =
+    totalMealDays > 0 ? Math.round((completedMealDayCount / totalMealDays) * 100) : 0
+
+  // Get current week dietary progress
+  const currentWeek = currentWorkoutPlan.dietaryPlan?.[0]
+  let currentWeekMealCompleted = 0
+  const currentWeekMealTotal = currentWeek?.days?.length || 0
+
+  if (currentWeek) {
+    currentWeek.days.forEach((day: any) => {
+      const key = `${currentWeek.weekNumber}-${day.day}`
+      if (completedMeals.has(key)) {
+        currentWeekMealCompleted++
+      }
+    })
+  }
+
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-7xl">
       <Header userData={userData ?? null} />
@@ -119,6 +154,14 @@ const DashboardHome = () => {
         <div className="lg:col-span-2 space-y-6">
           <TodayWorkout todayWorkout={todayWorkout} navigate={navigate} />
           <WeekProgress currentWeekProgress={currentWeekProgress} navigate={navigate} />
+          <DietarySummaryCard
+            adherencePercentage={dietaryAdherencePercentage}
+            completedMealDays={completedMealDayCount}
+            totalMealDays={totalMealDays}
+            currentWeekCompleted={currentWeekMealCompleted}
+            currentWeekTotal={currentWeekMealTotal}
+            navigate={navigate}
+          />
           <GoalsOverview userData={userData ?? null} />
         </div>
 
@@ -129,6 +172,7 @@ const DashboardHome = () => {
             activeAchievements={activeAchievements}
             navigate={navigate}
           />
+
           <MotivationCard
             totalCompleted={totalCompleted}
             totalBurned={totalBurned}

@@ -42,13 +42,62 @@ export const calculateWeeklyCalories = (userData: UserData): WeeklyCalorieData[]
 }
 
 /**
+ * Calculate dietary progress for a trainee based on completed meals
+ */
+export const calculateDietaryProgress = (userData: UserData) => {
+  const workoutPlan = getWorkoutPlan(userData.traineeGoals?.targetTimeline)
+  const completedMeals = new Set(userData.traineeGoals?.completedMeals || [])
+
+  if (!workoutPlan.dietaryPlan) {
+    return {
+      totalMealDays: 0,
+      completedMealDays: 0,
+      adherencePercentage: 0,
+      avgDailyCalories: 0,
+    }
+  }
+
+  // Calculate total meal days
+  const totalMealDays = workoutPlan.dietaryPlan.reduce(
+    (acc: number, week: any) => acc + week.days.length,
+    0
+  )
+
+  // Calculate completed meal days and average calories
+  let totalCaloriesCompleted = 0
+  let completedDayCount = 0
+
+  workoutPlan.dietaryPlan.forEach((week: any) => {
+    week.days.forEach((day: any) => {
+      const key = `${week.weekNumber}-${day.day}`
+      if (completedMeals.has(key)) {
+        totalCaloriesCompleted += day.totalCalories
+        completedDayCount++
+      }
+    })
+  })
+
+  const avgDailyCalories =
+    completedDayCount > 0 ? Math.round(totalCaloriesCompleted / completedDayCount) : 0
+  const adherencePercentage =
+    totalMealDays > 0 ? Math.round((completedDayCount / totalMealDays) * 100) : 0
+
+  return {
+    totalMealDays,
+    completedMealDays: completedDayCount,
+    adherencePercentage,
+    avgDailyCalories,
+  }
+}
+
+/**
  * Generate complete analytics data for a trainee
  */
 export const generateAnalyticsDataset = (userData: UserData): TraineeAnalytics => {
   const workoutPlan = getWorkoutPlan(userData.traineeGoals?.targetTimeline)
   const weeklyCalories = calculateWeeklyCalories(userData)
 
-  // Calculate totals
+  // Calculate workout totals
   const totalCaloriesBurned = weeklyCalories.reduce((sum, week) => sum + week.caloriesBurned, 0)
   const totalWorkoutsCompleted = weeklyCalories.reduce(
     (sum, week) => sum + week.workoutsCompleted,
@@ -74,6 +123,9 @@ export const generateAnalyticsDataset = (userData: UserData): TraineeAnalytics =
     }
   }
 
+  // Calculate dietary progress
+  const dietaryProgress = calculateDietaryProgress(userData)
+
   return {
     userId: userData.uid,
     userName: userData.displayName || 'Unknown',
@@ -84,5 +136,10 @@ export const generateAnalyticsDataset = (userData: UserData): TraineeAnalytics =
     progressPercentage,
     currentWeek,
     targetTimeline: userData.traineeGoals?.targetTimeline,
+    // Dietary tracking
+    totalMealDaysCompleted: dietaryProgress.completedMealDays,
+    totalMealDays: dietaryProgress.totalMealDays,
+    dietaryAdherencePercentage: dietaryProgress.adherencePercentage,
+    avgDailyCalories: dietaryProgress.avgDailyCalories,
   }
 }
