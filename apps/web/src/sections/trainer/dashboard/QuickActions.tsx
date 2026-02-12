@@ -1,10 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { UserPlus, Calendar, BarChart, Settings } from 'lucide-react'
-
-interface QuickActionsProps {
-  navigate: (path: string) => void
-}
+import { QuickActionsProps } from '@/interface'
 
 const QuickActions = ({ navigate }: QuickActionsProps) => {
   return (

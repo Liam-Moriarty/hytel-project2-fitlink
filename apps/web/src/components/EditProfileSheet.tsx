@@ -24,7 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { UserData } from '@/interface'
+import { EditProfileSheetProps } from '@/interface'
 import { onboardingSchema, OnboardingFormValues } from '../pages/onboarding/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useUpdateProfile } from '@/hooks/useUser'
@@ -32,10 +32,6 @@ import { Edit } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-
-interface EditProfileSheetProps {
-  user: UserData
-}
 
 export function EditProfileSheet({ user }: EditProfileSheetProps) {
   const [open, setOpen] = useState(false)

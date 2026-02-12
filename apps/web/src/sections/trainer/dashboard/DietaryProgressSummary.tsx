@@ -3,12 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { UtensilsCrossed, ChevronRight } from 'lucide-react'
-import { TraineeAnalytics } from '@/interface'
-
-interface DietaryProgressSummaryProps {
-  clients: TraineeAnalytics[]
-  navigate: (path: string) => void
-}
+import { DietaryProgressSummaryProps } from '@/interface'
 
 const DietaryProgressSummary = ({ clients, navigate }: DietaryProgressSummaryProps) => {
   // Sort clients by dietary adherence (lowest first to identify those needing help)

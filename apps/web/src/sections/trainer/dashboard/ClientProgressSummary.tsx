@@ -3,12 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Target, ChevronRight } from 'lucide-react'
-import { TraineeAnalytics } from '@/interface'
-
-interface ClientProgressSummaryProps {
-  clients: TraineeAnalytics[]
-  navigate: (path: string) => void
-}
+import { ClientProgressSummaryProps } from '@/interface'
 
 const ClientProgressSummary = ({ clients, navigate }: ClientProgressSummaryProps) => {
   // Sort clients by progress (lowest first to identify those needing help) or by recent activity

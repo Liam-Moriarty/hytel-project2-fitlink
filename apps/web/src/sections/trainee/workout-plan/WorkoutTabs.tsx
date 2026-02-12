@@ -13,12 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CheckCircle2, Circle, Clock, Flame, Activity } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-interface WorkoutTabsProps {
-  workoutPlan: any
-  completedWorkouts: Set<string>
-  toggleWorkoutCompletion: (weekNum: number, dayNum: number) => void
-}
+import { WorkoutTabsProps } from '@/interface'
 
 const WorkoutTabs = ({
   workoutPlan,

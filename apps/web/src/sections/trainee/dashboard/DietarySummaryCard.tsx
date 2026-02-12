@@ -2,15 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { UtensilsCrossed, ArrowRight } from 'lucide-react'
-
-interface DietarySummaryCardProps {
-  adherencePercentage: number
-  completedMealDays: number
-  totalMealDays: number
-  currentWeekCompleted: number
-  currentWeekTotal: number
-  navigate: (path: string) => void
-}
+import { DietarySummaryCardProps } from '@/interface'
 
 const DietarySummaryCard = ({
   adherencePercentage,

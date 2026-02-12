@@ -210,6 +210,12 @@ export interface TraineeAnalytics {
   userName: string
   email: string
   weeklyCalories: WeeklyCalorieData[]
+  weeklyDietaryAdherence: {
+    weekNumber: number
+    adherencePercentage: number
+    completedDays: number
+    totalDays: number
+  }[]
   totalCaloriesBurned: number
   totalWorkoutsCompleted: number
   progressPercentage: number
@@ -294,4 +300,85 @@ export interface DietarySummaryCardProps {
   currentWeekCompleted: number
   currentWeekTotal: number
   navigate: (path: string) => void
+}
+
+export interface EditProfileSheetProps {
+  user: UserData
+}
+
+export interface DietarySummaryCardProps {
+  adherencePercentage: number
+  completedMealDays: number
+  totalMealDays: number
+  currentWeekCompleted: number
+  currentWeekTotal: number
+  navigate: (path: string) => void
+}
+
+export interface DietaryStatsCardProps {
+  totalMealDays: number
+  completedMealDays: number
+  adherencePercentage: number
+  avgDailyCalories: number
+  currentStreak: number
+}
+
+export interface WorkoutTabsProps {
+  workoutPlan: any
+  completedWorkouts: Set<string>
+  toggleWorkoutCompletion: (weekNum: number, dayNum: number) => void
+}
+
+export interface IndividualTraineeDetailsProps {
+  analyticsData: TraineeAnalytics[]
+}
+
+export interface ProgressLineChartProps {
+  selectedTrainees: string[]
+  chartData: AnalyticsChartData[]
+  dietaryChartData: AnalyticsChartData[]
+  analyticsData: TraineeAnalytics[]
+  chartConfig: Record<string, { label: string; color: string }>
+  dietaryChartConfig: Record<string, { label: string; color: string }>
+}
+
+export interface StatsGridProps {
+  aggregateStats: {
+    totalWorkouts: number
+    totalCalories: number
+    avgProgress: number
+    avgDietaryAdherence: number
+  }
+}
+
+export interface TraineeSelectorProps {
+  clients: UserData[]
+  selectedTrainees: string[]
+  onTraineeSelect: (traineeId: string) => void
+}
+
+export interface ClientProgressSummaryProps {
+  clients: TraineeAnalytics[]
+  navigate: (path: string) => void
+}
+
+export interface DietaryProgressSummaryProps {
+  clients: TraineeAnalytics[]
+  navigate: (path: string) => void
+}
+
+export interface QuickActionsProps {
+  navigate: (path: string) => void
+}
+
+export interface ScheduleOverviewProps {
+  availability: string[]
+  navigate: (path: string) => void
+}
+
+export interface TrainerStatsGridProps {
+  totalClients: number
+  totalWorkouts: number
+  successRate: number
+  totalCalories: number
 }

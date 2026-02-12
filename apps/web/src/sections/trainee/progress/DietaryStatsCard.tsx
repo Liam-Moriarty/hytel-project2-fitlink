@@ -1,13 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DietaryStatsCardProps } from '@/interface'
 import { UtensilsCrossed, Target, Flame, TrendingUp } from 'lucide-react'
-
-interface DietaryStatsCardProps {
-  totalMealDays: number
-  completedMealDays: number
-  adherencePercentage: number
-  avgDailyCalories: number
-  currentStreak: number
-}
 
 const DietaryStatsCard = ({
   totalMealDays,

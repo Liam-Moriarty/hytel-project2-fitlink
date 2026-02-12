@@ -2,11 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Calendar, ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-
-interface ScheduleOverviewProps {
-  availability: string[]
-  navigate: (path: string) => void
-}
+import { ScheduleOverviewProps } from '@/interface'
 
 const ScheduleOverview = ({ availability, navigate }: ScheduleOverviewProps) => {
   return (

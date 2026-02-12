@@ -91,11 +91,45 @@ export const calculateDietaryProgress = (userData: UserData) => {
 }
 
 /**
+ * Calculate weekly dietary adherence for a trainee based on completed meals
+ */
+export const calculateWeeklyDietaryAdherence = (userData: UserData) => {
+  const workoutPlan = getWorkoutPlan(userData.traineeGoals?.targetTimeline)
+  const completedMeals = new Set(userData.traineeGoals?.completedMeals || [])
+
+  if (!workoutPlan.dietaryPlan) {
+    return []
+  }
+
+  return workoutPlan.dietaryPlan.map((week: any) => {
+    const totalDays = week.days.length
+    let completedDays = 0
+
+    week.days.forEach((day: any) => {
+      const key = `${week.weekNumber}-${day.day}`
+      if (completedMeals.has(key)) {
+        completedDays++
+      }
+    })
+
+    const adherencePercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0
+
+    return {
+      weekNumber: week.weekNumber,
+      adherencePercentage,
+      completedDays,
+      totalDays,
+    }
+  })
+}
+
+/**
  * Generate complete analytics data for a trainee
  */
 export const generateAnalyticsDataset = (userData: UserData): TraineeAnalytics => {
   const workoutPlan = getWorkoutPlan(userData.traineeGoals?.targetTimeline)
   const weeklyCalories = calculateWeeklyCalories(userData)
+  const weeklyDietaryAdherence = calculateWeeklyDietaryAdherence(userData)
 
   // Calculate workout totals
   const totalCaloriesBurned = weeklyCalories.reduce((sum, week) => sum + week.caloriesBurned, 0)
@@ -131,6 +165,7 @@ export const generateAnalyticsDataset = (userData: UserData): TraineeAnalytics =
     userName: userData.displayName || 'Unknown',
     email: userData.email || '',
     weeklyCalories,
+    weeklyDietaryAdherence,
     totalCaloriesBurned,
     totalWorkoutsCompleted,
     progressPercentage,

@@ -1,12 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { TrainerStatsGridProps } from '@/interface'
 import { Activity, Users, Flame, TrendingUp } from 'lucide-react'
-
-interface TrainerStatsGridProps {
-  totalClients: number
-  totalWorkouts: number
-  successRate: number
-  totalCalories: number
-}
 
 const TrainerStatsGrid = ({
   totalClients,
