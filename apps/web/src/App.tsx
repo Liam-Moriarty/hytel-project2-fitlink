@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+
 import Signup from './pages/auth/Signup'
 import Login from './pages/auth/Login'
 import GetToKnow from './pages/onboarding/GetToKnow'
-import { useEffect } from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
-import { useAuthStore } from '@/lib/store/useAuthStore'
-import { getFullUser } from '@/lib/api/user'
 import Dashboard from './pages/dashboard/Dashboard'
 import DashboardHome from './pages/trainee/DashboardHome'
 import WorkoutPlan from './pages/trainee/WorkoutPlan'
@@ -18,9 +18,13 @@ import Analytics from './pages/trainer/Analytics'
 import TrainerDashboard from './pages/trainer/TrainerDashboard'
 import TrainerProfile from './pages/trainer/TrainerProfile'
 
+import { useAuthStore } from '@/lib/store/useAuthStore'
+import { getFullUser } from '@/lib/api/user'
+
 const App = () => {
   const { setUser, setUserData, setLoading, loading } = useAuthStore()
 
+  // It watches for changes to the user's login status like when they sign in or sign out.
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async user => {
       setUser(user)

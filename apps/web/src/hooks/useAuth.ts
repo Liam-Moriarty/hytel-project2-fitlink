@@ -14,12 +14,13 @@ export const useSignupMutation = () => {
     mutationFn: (data: SignupFormValues) => signUpWithEmail(data),
     onSuccess: async user => {
       const userDoc = await getFullUser(user.uid)
+      // functions that save user info to your app's global storage
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
-        navigate('/dashboard/trainee')
+        navigate(`/dashboard/${userDoc.role}`) // If they have a role assigned → send them to the dashboard
       } else {
-        navigate('/onboarding')
+        navigate('/onboarding') // If they don't have a role yet → send them to onboarding to finish setup
       }
     },
   })
@@ -37,7 +38,7 @@ export const useLoginMutation = () => {
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
-        navigate('/dashboard/trainee')
+        navigate(`/dashboard/${userDoc.role}`)
       } else {
         navigate('/onboarding')
       }
@@ -57,7 +58,7 @@ export const useGoogleLoginMutation = () => {
       setUser(user)
       setUserData(userDoc)
       if (userDoc?.role) {
-        navigate('/dashboard/trainee')
+        navigate(`/dashboard/${userDoc.role}`)
       } else {
         navigate('/onboarding')
       }

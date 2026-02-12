@@ -9,10 +9,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
 
+import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
+
 import { loginSchema, LoginFormValues } from '@/lib/schemas/auth'
 import { useLoginMutation, useGoogleLoginMutation } from '@/hooks/useAuth'
 
@@ -65,15 +67,7 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  to="/forgot-password"
-                  className="text-xs text-primary hover:underline font-medium"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" {...register('password')} />
               {errors.password && (
                 <p className="text-destructive text-xs">{errors.password.message}</p>

@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { doc, getDoc } from 'firebase/firestore'
-import { db } from '../firebase'
 import { UserData, WeeklyCalorieData, TraineeAnalytics } from '@/interface'
 import { month1TraineeWorkoutPlan } from '@/constants/month1TraineeWorkoutPlan'
 import { month3TraineeWorkoutPlan } from '@/constants/month3TraineeWorkoutPlan'
@@ -14,31 +12,6 @@ const getWorkoutPlan = (targetTimeline?: string) => {
   if (timeline.includes('1 month')) return month1TraineeWorkoutPlan
   if (timeline.includes('6 month') || timeline.includes('1 year')) return month6TraineeWorkoutPlan
   return month3TraineeWorkoutPlan // Default to 3 months
-}
-
-/**
- * Fetch full trainee data including goals and completion status
- */
-export const getTraineeAnalyticsData = async (userId: string): Promise<UserData | null> => {
-  const userRef = doc(db, 'users', userId)
-  const userSnap = await getDoc(userRef)
-
-  if (!userSnap.exists()) return null
-
-  const userData = userSnap.data()
-
-  // Fetch trainee goals if they are a trainee
-  let traineeData = null
-  if (userData.role === 'trainee') {
-    const goalsRef = doc(db, 'traineeGoals', userId)
-    const goalsSnap = await getDoc(goalsRef)
-    traineeData = goalsSnap.exists() ? goalsSnap.data() : null
-  }
-
-  return {
-    ...userData,
-    traineeGoals: traineeData,
-  } as UserData & { traineeGoals: any }
 }
 
 /**

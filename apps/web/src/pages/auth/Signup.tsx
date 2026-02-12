@@ -6,12 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
+
 import { signupSchema, SignupFormValues } from '@/lib/schemas/auth'
 import { useSignupMutation, useGoogleLoginMutation } from '@/hooks/useAuth'
 
