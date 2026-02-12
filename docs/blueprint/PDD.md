@@ -1,4 +1,4 @@
-# **FitLink Product Design Document **
+# **FitLink Product Design Document. **
 
 **Project Name:** FitLink
 **Platform:** Web
