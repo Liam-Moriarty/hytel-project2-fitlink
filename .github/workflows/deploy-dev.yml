@@ -26,6 +26,7 @@ on:
 env:
   NODE_VERSION: '20'
   PNPM_VERSION: '8'
+  # GCP_PROJECT_ID: 'hytel-project'
 
 # ============================================================================
 # CONCURRENCY
@@ -55,7 +56,7 @@ jobs:
     environment:
       name: dev
       # TODO: Update with your dev URL
-      url: https://dev.example.com
+      url: https://hytel-projects.web.app
 
     steps:
       - name: Checkout repository
@@ -94,6 +95,12 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SA_EMAIL }}
 
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
       # ======================================================================
       # Deploy to Firebase
       # ======================================================================
@@ -101,13 +108,21 @@ jobs:
       # service account. No explicit project ID needed.
       # ======================================================================
       - name: Deploy to Firebase Hosting
+        # run: |
+        #   npm install -g firebase-tools
+        #   firebase deploy --only hosting
         run: |
-          npm install -g firebase-tools
-          firebase deploy --only hosting
+          export FIREBASE_TOKEN=$(gcloud auth print-access-token)
+          firebase deploy --only hosting --project ${{ env.GCP_PROJECT_ID }} --token "$FIREBASE_TOKEN"
 
       - name: Deploy Firebase Functions
-        run: firebase deploy --only functions
+        run: |
+          export FIREBASE_TOKEN=$(gcloud auth print-access-token)
+          firebase deploy --only functions --project ${{ env.GCP_PROJECT_ID }} --token "$FIREBASE_TOKEN"
         continue-on-error: true # Skip if no functions configured
+
+        # run: firebase deploy --only functions
+        # continue-on-error: true # Skip if no functions configured
 
       - name: Deployment Summary
         run: |
