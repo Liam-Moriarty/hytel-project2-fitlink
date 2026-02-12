@@ -1,11 +1,9 @@
-import { getFullUser, updateTraineeGoals } from '@/lib/api/user'
+import { useCurrentUser, useUpdateTraineeGoals } from '@/hooks/useUser'
 import { getAuth } from 'firebase/auth'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { month1TraineeWorkoutPlan } from '@/constants/month1TraineeWorkoutPlan'
 import { month3TraineeWorkoutPlan } from '@/constants/month3TraineeWorkoutPlan'
 import { month6TraineeWorkoutPlan } from '@/constants/month6TraineeWorkoutPlan'
 import { useState, useEffect } from 'react'
-import { UserData } from '@/interface'
 
 // Section Components
 import Header from '@/sections/trainee/workout-plan/Header'
@@ -18,13 +16,9 @@ const WorkoutPlan = () => {
   const auth = getAuth()
   const currentUser = auth.currentUser
 
-  const { data: userData, isLoading } = useQuery<UserData | null>({
-    queryKey: ['user', currentUser?.uid],
-    queryFn: () => (currentUser ? getFullUser(currentUser.uid) : null),
-    enabled: !!currentUser,
-  })
+  const { data: userData, isLoading } = useCurrentUser()
 
-  const queryClient = useQueryClient()
+  const { mutate: updateGoals } = useUpdateTraineeGoals(currentUser?.uid ?? '')
   const [completedWorkouts, setCompletedWorkouts] = useState<Set<string>>(new Set())
 
   // Sync state with user data when loaded
@@ -33,14 +27,6 @@ const WorkoutPlan = () => {
       setCompletedWorkouts(new Set(userData.traineeGoals.completedWorkouts))
     }
   }, [userData])
-
-  const { mutate: updateGoals } = useMutation({
-    mutationFn: (newCompletedWorkouts: string[]) =>
-      updateTraineeGoals(currentUser!.uid, { completedWorkouts: newCompletedWorkouts }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user', currentUser?.uid] })
-    },
-  })
 
   const toggleWorkoutCompletion = (weekNum: number, dayNum: number) => {
     if (!currentUser) return // Guard clause
@@ -55,7 +41,7 @@ const WorkoutPlan = () => {
     }
 
     setCompletedWorkouts(newSet) // Optimistic update
-    updateGoals(Array.from(newSet))
+    updateGoals({ completedWorkouts: Array.from(newSet) })
   }
 
   if (isLoading) {

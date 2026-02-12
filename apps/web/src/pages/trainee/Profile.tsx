@@ -1,7 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { getFullUser } from '@/lib/api/user'
+import { useUserProfile } from '@/hooks/useUser'
 import { useAuthStore } from '@/lib/store/useAuthStore'
-import { useQuery } from '@tanstack/react-query'
 
 // Section Components
 import Header from '@/sections/trainee/profile/Header'
@@ -15,11 +14,7 @@ import LogoutButton from '@/sections/trainee/profile/LogoutButton'
 const Profile = () => {
   const { userData } = useAuthStore()
 
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['user', userData?.uid],
-    queryFn: () => getFullUser(userData!.uid),
-    enabled: !!userData?.uid,
-  })
+  const { data: user, isLoading } = useUserProfile(userData?.uid)
 
   if (isLoading) {
     return (

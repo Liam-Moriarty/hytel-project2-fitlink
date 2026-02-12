@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { getFullUser } from '@/lib/api/user'
+import { useUserProfile } from '@/hooks/useUser'
 import { getTrainerProfile } from '@/lib/api/trainer'
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
@@ -14,11 +14,7 @@ import SettingsCard from '@/sections/trainer/profile/SettingsCard'
 const TrainerProfile = () => {
   const { userData } = useAuthStore()
 
-  const { data: user, isLoading: isUserLoading } = useQuery({
-    queryKey: ['user', userData?.uid],
-    queryFn: () => getFullUser(userData!.uid),
-    enabled: !!userData?.uid,
-  })
+  const { data: user, isLoading: isUserLoading } = useUserProfile(userData?.uid)
 
   const { data: trainerProfile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['trainerProfile', userData?.uid],

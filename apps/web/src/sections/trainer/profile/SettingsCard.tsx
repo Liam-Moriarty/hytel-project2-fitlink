@@ -27,16 +27,14 @@ import {
 } from '@/components/ui/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useUpdateUser } from '@/hooks/useUser'
 import { toast } from 'sonner'
 import { Bell, Edit, Settings } from 'lucide-react'
-import { updateUser } from '@/lib/api/user'
 import { trainerPersonalInfoSchema, TrainerPersonalInfoValues } from '@/lib/schemas/trainer'
 import { TrainerSettingsCardProps } from '@/interface'
 
 const SettingsCard = ({ user }: TrainerSettingsCardProps) => {
   const [open, setOpen] = useState(false)
-  const queryClient = useQueryClient()
 
   const form = useForm<TrainerPersonalInfoValues>({
     resolver: zodResolver(trainerPersonalInfoSchema),
@@ -50,29 +48,28 @@ const SettingsCard = ({ user }: TrainerSettingsCardProps) => {
     },
   })
 
-  const mutation = useMutation({
-    mutationFn: async (values: TrainerPersonalInfoValues) => {
-      await updateUser(user.uid, {
+  const mutation = useUpdateUser(user.uid)
+
+  const onSubmit = (values: TrainerPersonalInfoValues) => {
+    mutation.mutate(
+      {
         age: parseInt(values.age),
         gender: values.gender,
         height: parseInt(values.height),
         weight: parseInt(values.weight),
         activityLevel: values.activityLevel,
-      })
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user', user.uid] })
-      toast.success('Profile updated successfully')
-      setOpen(false)
-    },
-    onError: error => {
-      toast.error('Failed to update profile')
-      console.error(error)
-    },
-  })
-
-  const onSubmit = (values: TrainerPersonalInfoValues) => {
-    mutation.mutate(values)
+      },
+      {
+        onSuccess: () => {
+          toast.success('Profile updated successfully')
+          setOpen(false)
+        },
+        onError: error => {
+          toast.error('Failed to update profile')
+          console.error(error)
+        },
+      }
+    )
   }
 
   const handleOpenChange = (isOpen: boolean) => {

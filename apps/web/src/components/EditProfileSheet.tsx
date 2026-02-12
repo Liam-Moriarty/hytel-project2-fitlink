@@ -27,11 +27,10 @@ import {
 import { UserData } from '@/interface'
 import { onboardingSchema, OnboardingFormValues } from '../pages/onboarding/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useUpdateProfile } from '@/hooks/useUser'
 import { Edit } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { updateTraineeGoals, updateUser } from '@/lib/api/user'
 import { toast } from 'sonner'
 
 interface EditProfileSheetProps {
@@ -40,7 +39,6 @@ interface EditProfileSheetProps {
 
 export function EditProfileSheet({ user }: EditProfileSheetProps) {
   const [open, setOpen] = useState(false)
-  const queryClient = useQueryClient()
 
   const form = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -61,40 +59,40 @@ export function EditProfileSheet({ user }: EditProfileSheetProps) {
     },
   })
 
-  const mutation = useMutation({
-    mutationFn: async (values: OnboardingFormValues) => {
-      // Update User Data
-      await updateUser(user.uid, {
-        gender: values.gender,
-        age: parseInt(values.age),
-        height: parseInt(values.height),
-        weight: parseInt(values.weight),
-        activityLevel: values.activityLevel,
-      })
-
-      // Update Trainee Goals
-      if (user.role === 'trainee') {
-        await updateTraineeGoals(user.uid, {
-          goals: values.goals,
-          preferredWorkoutTypes: values.preferredWorkoutTypes,
-          frequencyPerWeek: values.frequencyPerWeek,
-          targetTimeline: values.targetTimeline,
-        })
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user', user.uid] })
-      toast.success('Profile updated successfully')
-      setOpen(false)
-    },
-    onError: error => {
-      toast.error('Failed to update profile')
-      console.error(error)
-    },
-  })
+  const mutation = useUpdateProfile(user.uid)
 
   function onSubmit(values: OnboardingFormValues) {
-    mutation.mutate(values)
+    mutation.mutate(
+      {
+        userData: {
+          gender: values.gender,
+          age: parseInt(values.age),
+          height: parseInt(values.height),
+          weight: parseInt(values.weight),
+          activityLevel: values.activityLevel,
+        },
+        traineeGoals:
+          user.role === 'trainee'
+            ? {
+                goals: values.goals,
+                preferredWorkoutTypes: values.preferredWorkoutTypes,
+                frequencyPerWeek: values.frequencyPerWeek,
+                targetTimeline: values.targetTimeline,
+              }
+            : undefined,
+        role: user.role,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Profile updated successfully')
+          setOpen(false)
+        },
+        onError: error => {
+          toast.error('Failed to update profile')
+          console.error(error)
+        },
+      }
+    )
   }
 
   return (

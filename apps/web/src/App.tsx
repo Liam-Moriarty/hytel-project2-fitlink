@@ -19,7 +19,8 @@ import TrainerDashboard from './pages/trainer/TrainerDashboard'
 import TrainerProfile from './pages/trainer/TrainerProfile'
 
 import { useAuthStore } from '@/lib/store/useAuthStore'
-import { getFullUser } from '@/lib/api/user'
+import { getFullUser, userKeys } from '@/lib/api/user'
+import { queryClient } from '@/lib/queryClient'
 
 const App = () => {
   const { setUser, setUserData, setLoading, loading } = useAuthStore()
@@ -32,8 +33,12 @@ const App = () => {
         // Fetch user data from Firestore when auth state changes
         const userDoc = await getFullUser(user.uid)
         setUserData(userDoc)
+        // Pre-populate TanStack Query cache so dashboard pages render instantly
+        queryClient.setQueryData(userKeys.detail(user.uid), userDoc)
       } else {
         setUserData(null)
+        // Clear user cache on logout
+        queryClient.removeQueries({ queryKey: userKeys.all })
       }
       setLoading(false)
     })

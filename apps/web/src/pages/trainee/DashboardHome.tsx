@@ -1,10 +1,7 @@
-import { getFullUser } from '@/lib/api/user'
-import { getAuth } from 'firebase/auth'
-import { useQuery } from '@tanstack/react-query'
+import { useCurrentUser } from '@/hooks/useUser'
 import { month1TraineeWorkoutPlan } from '@/constants/month1TraineeWorkoutPlan'
 import { month3TraineeWorkoutPlan } from '@/constants/month3TraineeWorkoutPlan'
 import { month6TraineeWorkoutPlan } from '@/constants/month6TraineeWorkoutPlan'
-import { UserData } from '@/interface'
 import { getAchievements } from '@/constants'
 import { useNavigate } from 'react-router-dom'
 
@@ -18,15 +15,9 @@ import Achievements from '@/sections/trainee/dashboard/TraineeAchievements'
 import MotivationCard from '@/sections/trainee/dashboard/MotivationCard'
 
 const DashboardHome = () => {
-  const auth = getAuth()
-  const currentUser = auth.currentUser
   const navigate = useNavigate()
 
-  const { data: userData, isLoading } = useQuery<UserData | null>({
-    queryKey: ['user', currentUser?.uid],
-    queryFn: () => (currentUser ? getFullUser(currentUser.uid) : null),
-    enabled: !!currentUser,
-  })
+  const { data: userData, isLoading } = useCurrentUser()
 
   if (isLoading) {
     return (

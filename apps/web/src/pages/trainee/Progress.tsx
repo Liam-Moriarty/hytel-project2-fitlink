@@ -1,11 +1,8 @@
-import { getFullUser } from '@/lib/api/user'
-import { getAuth } from 'firebase/auth'
-import { useQuery } from '@tanstack/react-query'
+import { useCurrentUser } from '@/hooks/useUser'
 import { month1TraineeWorkoutPlan } from '@/constants/month1TraineeWorkoutPlan'
 import { month3TraineeWorkoutPlan } from '@/constants/month3TraineeWorkoutPlan'
 import { month6TraineeWorkoutPlan } from '@/constants/month6TraineeWorkoutPlan'
 import { useState } from 'react'
-import { UserData } from '@/interface'
 import { getAchievements } from '@/constants'
 
 // Section Components
@@ -18,15 +15,9 @@ import Achievements from '@/sections/trainee/progress/Achievements'
 const ITEMS_PER_PAGE = 5
 
 const ProgressPage = () => {
-  const auth = getAuth()
-  const currentUser = auth.currentUser
   const [currentPage, setCurrentPage] = useState(1)
 
-  const { data: userData, isLoading } = useQuery<UserData | null>({
-    queryKey: ['user', currentUser?.uid],
-    queryFn: () => (currentUser ? getFullUser(currentUser.uid) : null),
-    enabled: !!currentUser,
-  })
+  const { data: userData, isLoading } = useCurrentUser()
 
   if (isLoading) {
     return (

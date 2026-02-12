@@ -3,6 +3,11 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { UserData } from '@/interface'
 
+export const userKeys = {
+  all: ['user'] as const,
+  detail: (uid: string) => ['user', uid] as const,
+} as const
+
 export const getFullUser = async (uid: string): Promise<UserData | null> => {
   const userRef = doc(db, 'users', uid)
   const userSnap = await getDoc(userRef)

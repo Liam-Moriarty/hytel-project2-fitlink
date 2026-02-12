@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/lib/store/useAuthStore'
-import { updateUser, createTraineeGoals, createTrainerProfile } from '@/lib/api/user'
+import { useOnboarding } from '@/hooks/useUser'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -27,8 +27,9 @@ const GetToKnow = () => {
   const navigate = useNavigate()
   const { user, setUserData } = useAuthStore()
   const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
   const [role, setRole] = useState<Role>('trainee')
+
+  const onboardingMutation = useOnboarding(user?.uid ?? '')
 
   const form = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -127,55 +128,58 @@ const GetToKnow = () => {
     setStep(prev => prev - 1)
   }
 
-  const handleSubmit = async (data: OnboardingFormValues) => {
+  const handleSubmit = (data: OnboardingFormValues) => {
     if (!user) return
-    setLoading(true)
 
-    try {
-      // 1. Update User Profile
-      const userData = {
-        role,
-        gender: data.gender,
-        age: Number(data.age),
-        height: Number(data.height),
-        weight: Number(data.weight),
-        activityLevel: data.activityLevel,
-      }
-
-      await updateUser(user.uid, userData)
-
-      // 2. Create Role Specific Data
-      if (role === 'trainee') {
-        await createTraineeGoals(user.uid, {
-          goals: data.goals,
-          preferredWorkoutTypes: data.preferredWorkoutTypes,
-          frequencyPerWeek: Number(data.frequencyPerWeek),
-          targetTimeline: data.targetTimeline,
-        })
-      } else {
-        await createTrainerProfile(user.uid, {
-          specialties: data.specialties,
-          certifications: data.certifications,
-          availability: data.availability,
-          traineeIds: [],
-        })
-      }
-
-      // 3. Update local store and redirect
-      setUserData({
-        ...userData,
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        createdAt: new Date(),
-      })
-      navigate(role === 'trainer' ? '/dashboard/trainer' : '/dashboard/trainee')
-    } catch (error) {
-      console.error('Error saving onboarding data:', error)
-      alert('Failed to save data. Please try again.')
-    } finally {
-      setLoading(false)
+    const userData = {
+      role,
+      gender: data.gender,
+      age: Number(data.age),
+      height: Number(data.height),
+      weight: Number(data.weight),
+      activityLevel: data.activityLevel,
     }
+
+    onboardingMutation.mutate(
+      {
+        role,
+        userData,
+        traineeGoals:
+          role === 'trainee'
+            ? {
+                goals: data.goals,
+                preferredWorkoutTypes: data.preferredWorkoutTypes,
+                frequencyPerWeek: Number(data.frequencyPerWeek),
+                targetTimeline: data.targetTimeline,
+              }
+            : undefined,
+        trainerProfile:
+          role === 'trainer'
+            ? {
+                specialties: data.specialties,
+                certifications: data.certifications,
+                availability: data.availability,
+                traineeIds: [],
+              }
+            : undefined,
+      },
+      {
+        onSuccess: () => {
+          setUserData({
+            ...userData,
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            createdAt: new Date(),
+          })
+          navigate(role === 'trainer' ? '/dashboard/trainer' : '/dashboard/trainee')
+        },
+        onError: error => {
+          console.error('Error saving onboarding data:', error)
+          alert('Failed to save data. Please try again.')
+        },
+      }
+    )
   }
 
   return (
@@ -220,15 +224,15 @@ const GetToKnow = () => {
 
         <CardFooter className="flex justify-between mt-6">
           {step > 1 ? (
-            <Button variant="outline" onClick={handleBack} disabled={loading}>
+            <Button variant="outline" onClick={handleBack} disabled={onboardingMutation.isPending}>
               Back
             </Button>
           ) : (
             <div></div> // Spacer
           )}
 
-          <Button onClick={handleNext} disabled={loading} className="px-8">
-            {loading ? (
+          <Button onClick={handleNext} disabled={onboardingMutation.isPending} className="px-8">
+            {onboardingMutation.isPending ? (
               'Saving...'
             ) : step === 5 ? (
               'Finish'

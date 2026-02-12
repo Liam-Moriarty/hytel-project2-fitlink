@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { signUpWithEmail, signInWithEmail, signInWithGoogle, logout } from '@/lib/api/auth'
-import { getFullUser } from '@/lib/api/user'
+import { getFullUser, userKeys } from '@/lib/api/user'
+import { queryClient } from '@/lib/queryClient'
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { LoginFormValues, SignupFormValues } from '@/lib/schemas/auth'
 import { useNavigate } from 'react-router-dom'
@@ -14,13 +15,13 @@ export const useSignupMutation = () => {
     mutationFn: (data: SignupFormValues) => signUpWithEmail(data),
     onSuccess: async user => {
       const userDoc = await getFullUser(user.uid)
-      // functions that save user info to your app's global storage
       setUser(user)
       setUserData(userDoc)
+      queryClient.setQueryData(userKeys.detail(user.uid), userDoc)
       if (userDoc?.role) {
-        navigate(`/dashboard/${userDoc.role}`) // If they have a role assigned → send them to the dashboard
+        navigate(`/dashboard/${userDoc.role}`)
       } else {
-        navigate('/onboarding') // If they don't have a role yet → send them to onboarding to finish setup
+        navigate('/onboarding')
       }
     },
   })
@@ -37,6 +38,7 @@ export const useLoginMutation = () => {
       const userDoc = await getFullUser(user.uid)
       setUser(user)
       setUserData(userDoc)
+      queryClient.setQueryData(userKeys.detail(user.uid), userDoc)
       if (userDoc?.role) {
         navigate(`/dashboard/${userDoc.role}`)
       } else {
@@ -57,6 +59,7 @@ export const useGoogleLoginMutation = () => {
       const userDoc = await getFullUser(user.uid)
       setUser(user)
       setUserData(userDoc)
+      queryClient.setQueryData(userKeys.detail(user.uid), userDoc)
       if (userDoc?.role) {
         navigate(`/dashboard/${userDoc.role}`)
       } else {
@@ -74,6 +77,7 @@ export const useLogoutMutation = () => {
     mutationFn: logout,
     onSuccess: () => {
       clearAuth()
+      queryClient.removeQueries({ queryKey: userKeys.all })
       navigate('/login')
     },
   })
