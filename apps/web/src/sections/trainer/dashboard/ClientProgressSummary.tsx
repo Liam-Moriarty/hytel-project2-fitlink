@@ -27,7 +27,7 @@ const ClientProgressSummary = ({ clients, navigate }: ClientProgressSummaryProps
             </CardTitle>
             <CardDescription>Overall completion status of your trainees</CardDescription>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/trainer/clients')}>
+          <Button variant="ghost" size="sm" onClick={() => navigate('clients')}>
             View All <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
@@ -37,7 +37,7 @@ const ClientProgressSummary = ({ clients, navigate }: ClientProgressSummaryProps
           {sortedClients.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center p-4">
               <p className="text-muted-foreground">No active clients found.</p>
-              <Button variant="link" onClick={() => navigate('/trainer/clients')}>
+              <Button variant="link" onClick={() => navigate('clients')}>
                 Invite Clients
               </Button>
             </div>

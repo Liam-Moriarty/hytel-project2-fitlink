@@ -121,18 +121,15 @@ const Analytics = () => {
 
   console.log('chart config', chartConfig)
 
-  // Handle trainee selection (max 2)
+  // Handle trainee selection (single select)
   const handleTraineeSelect = (traineeId: string) => {
     setSelectedTrainees(prev => {
       if (prev.includes(traineeId)) {
         // Deselect if already selected
-        return prev.filter(id => id !== traineeId)
-      } else if (prev.length >= 2) {
-        // Replace first trainee if already at max
-        return [prev[1], traineeId]
+        return []
       } else {
-        // Add to selection
-        return [...prev, traineeId]
+        // Select only this trainee
+        return [traineeId]
       }
     })
   }
@@ -184,8 +181,8 @@ const Analytics = () => {
       {/* Trainee Selector */}
       <Card>
         <CardHeader>
-          <CardTitle>Select Trainees to Compare</CardTitle>
-          <CardDescription>Choose up to 2 trainees to analyze their progress</CardDescription>
+          <CardTitle>Select a Trainee</CardTitle>
+          <CardDescription>Choose a trainee to view their analytics</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
@@ -210,9 +207,7 @@ const Analytics = () => {
             )}
           </div>
           {selectedTrainees.length > 0 && (
-            <p className="text-xs text-muted-foreground mt-3">
-              {selectedTrainees.length}/2 trainees selected
-            </p>
+            <p className="text-xs text-muted-foreground mt-3">1 trainee selected</p>
           )}
         </CardContent>
       </Card>
@@ -227,9 +222,7 @@ const Analytics = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{aggregateStats.totalWorkouts}</div>
-              <p className="text-xs text-muted-foreground">
-                Across {selectedTrainees.length} trainee{selectedTrainees.length > 1 ? 's' : ''}
-              </p>
+              <p className="text-xs text-muted-foreground">Selected trainee</p>
             </CardContent>
           </Card>
 
@@ -242,7 +235,7 @@ const Analytics = () => {
               <div className="text-2xl font-bold">
                 {aggregateStats.totalCalories.toLocaleString()}
               </div>
-              <p className="text-xs text-muted-foreground">Combined calorie burn</p>
+              <p className="text-xs text-muted-foreground">Total calorie burn</p>
             </CardContent>
           </Card>
 
@@ -274,10 +267,8 @@ const Analytics = () => {
       {selectedTrainees.length > 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>Weekly Calorie Burn Comparison</CardTitle>
-            <CardDescription>
-              Track calorie burn progress week by week for selected trainees
-            </CardDescription>
+            <CardTitle>Weekly Calorie Burn Progress</CardTitle>
+            <CardDescription>Track calorie burn progress week by week</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[400px] w-full">
@@ -332,8 +323,7 @@ const Analytics = () => {
             <div className="space-y-2">
               <h3 className="text-xl font-semibold">No Trainees Selected</h3>
               <p className="text-muted-foreground max-w-md">
-                Select up to 2 trainees from the list above to view and compare their calorie burn
-                progress
+                Select a trainee from the list above to view their calorie burn progress
               </p>
             </div>
           </CardContent>
@@ -342,7 +332,7 @@ const Analytics = () => {
 
       {/* Individual Trainee Details */}
       {analyticsData.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {analyticsData.map(trainee => (
             <Card key={trainee.userId}>
               <CardHeader>
