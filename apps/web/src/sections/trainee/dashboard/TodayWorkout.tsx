@@ -40,6 +40,7 @@ const TodayWorkout = ({ todayWorkout, navigate }: TodayWorkoutProps) => {
         </div>
         <CardDescription>Your next scheduled session</CardDescription>
       </CardHeader>
+
       <CardContent>
         <div className="space-y-4">
           <div>

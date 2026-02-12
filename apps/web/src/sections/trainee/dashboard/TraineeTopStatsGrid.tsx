@@ -71,7 +71,7 @@ const TraineeTopStatsGrid = ({
           <CardDescription className="text-orange-100 flex items-center gap-2">
             <Flame className="h-4 w-4" /> Current Streak
           </CardDescription>
-          <CardTitle className="text-4xl font-bold">5</CardTitle>
+          <CardTitle className="text-4xl font-bold">1</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-orange-100">days in a row</p>
