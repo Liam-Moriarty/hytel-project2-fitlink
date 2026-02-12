@@ -254,11 +254,6 @@ export interface MealPlanTabsProps {
   toggleMealCompletion: (weekNum: number, dayNum: number) => void
 }
 
-export interface DietaryInsightsCardProps {
-  completedMeals: Set<string>
-  workoutPlan: any
-}
-
 export interface DietaryFooterProps {
   userData: UserData | null
 }
@@ -381,4 +376,9 @@ export interface TrainerStatsGridProps {
   totalWorkouts: number
   successRate: number
   totalCalories: number
+}
+
+export interface CalorieBurnChartSummaryProps {
+  clients: UserData[]
+  analyticsData: TraineeAnalytics[]
 }

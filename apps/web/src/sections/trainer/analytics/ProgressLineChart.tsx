@@ -1,6 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts'
 import { Activity } from 'lucide-react'
 import { ProgressLineChartProps } from '@/interface'
 
@@ -95,7 +105,7 @@ const ProgressLineChart = ({
         <CardContent>
           <ChartContainer config={dietaryChartConfig} className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={dietaryChartData}>
+              <BarChart data={dietaryChartData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
                   dataKey="week"
@@ -123,18 +133,15 @@ const ProgressLineChart = ({
                   wrapperStyle={{ paddingTop: '20px' }}
                 />
                 {analyticsData.map((trainee, index) => (
-                  <Line
+                  <Bar
                     key={`dietary-${trainee.userId}`}
-                    type="monotone"
                     dataKey={`dietary-${trainee.userId}`}
-                    stroke={DIETARY_COLORS[index]}
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
+                    fill={DIETARY_COLORS[index]}
+                    radius={[4, 4, 0, 0]}
                     name={trainee.userName}
                   />
                 ))}
-              </LineChart>
+              </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
         </CardContent>

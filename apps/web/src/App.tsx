@@ -17,11 +17,34 @@ import Schedule from './pages/trainer/Schedule'
 import Analytics from './pages/trainer/Analytics'
 import TrainerDashboard from './pages/trainer/TrainerDashboard'
 import TrainerProfile from './pages/trainer/TrainerProfile'
+import ProtectedRoute from './components/ProtectedRoute'
 
 import { useAuthStore } from '@/lib/store/useAuthStore'
 import { getFullUser, userKeys } from '@/lib/api/user'
 import { queryClient } from '@/lib/queryClient'
 import DietaryPlan from './pages/trainee/DietaryPlan'
+
+// Redirects authenticated users away from auth pages to their dashboard
+const GuestRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, userData } = useAuthStore()
+
+  if (isAuthenticated && userData?.role) {
+    return <Navigate to={`/dashboard/${userData.role}`} replace />
+  }
+
+  return <>{children}</>
+}
+
+// Requires authentication but no specific role (for onboarding)
+const AuthOnlyRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuthStore()
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+
+  return <>{children}</>
+}
 
 const App = () => {
   const { setUser, setUserData, setLoading, loading } = useAuthStore()
@@ -54,26 +77,55 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        {/* Public routes - redirect to dashboard if already logged in */}
+        <Route
+          path="/signup"
+          element={
+            <GuestRoute>
+              <Signup />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        <Route path="/onboarding" element={<GetToKnow />} />
+        {/* Onboarding - requires auth but no role yet */}
+        <Route
+          path="/onboarding"
+          element={
+            <AuthOnlyRoute>
+              <GetToKnow />
+            </AuthOnlyRoute>
+          }
+        />
 
-        <Route path="/dashboard/trainee" element={<Dashboard />}>
-          <Route index element={<DashboardHome />} />
-          <Route path="workout-plan" element={<WorkoutPlan />} />
-          <Route path="dietary-plan" element={<DietaryPlan />} />
-          <Route path="progress" element={<Progress />} />
-          <Route path="profile" element={<Profile />} />
+        {/* Trainee routes - requires auth + trainee role */}
+        <Route element={<ProtectedRoute allowedRole="trainee" />}>
+          <Route path="/dashboard/trainee" element={<Dashboard />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="workout-plan" element={<WorkoutPlan />} />
+            <Route path="dietary-plan" element={<DietaryPlan />} />
+            <Route path="progress" element={<Progress />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
         </Route>
 
-        <Route path="/dashboard/trainer" element={<Dashboard />}>
-          <Route index element={<TrainerDashboard />} />
-          <Route path="clients" element={<Clients />} />
-          <Route path="schedule" element={<Schedule />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="profile" element={<TrainerProfile />} />
+        {/* Trainer routes - requires auth + trainer role */}
+        <Route element={<ProtectedRoute allowedRole="trainer" />}>
+          <Route path="/dashboard/trainer" element={<Dashboard />}>
+            <Route index element={<TrainerDashboard />} />
+            <Route path="clients" element={<Clients />} />
+            <Route path="schedule" element={<Schedule />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="profile" element={<TrainerProfile />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

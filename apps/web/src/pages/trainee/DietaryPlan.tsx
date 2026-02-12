@@ -9,7 +9,6 @@ import { useState, useEffect } from 'react'
 import Header from '@/sections/trainee/dietary-plan/Header'
 import GoalsCard from '@/sections/trainee/dietary-plan/GoalsCard'
 import MealPlanTabs from '@/sections/trainee/dietary-plan/MealPlanTabs'
-import InsightsCard from '@/sections/trainee/dietary-plan/InsightsCard'
 import Footer from '@/sections/trainee/dietary-plan/Footer'
 
 const DietaryPlan = () => {
@@ -88,8 +87,6 @@ const DietaryPlan = () => {
         dailyIntakeGoal={dailyIntakeGoal}
         totalWeeks={totalWeeks}
       />
-
-      <InsightsCard completedMeals={completedMeals} workoutPlan={currentWorkoutPlan} />
 
       <MealPlanTabs
         workoutPlan={currentWorkoutPlan}

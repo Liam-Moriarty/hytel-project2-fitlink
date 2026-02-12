@@ -15,6 +15,7 @@ import ClientProgressSummary from '@/sections/trainer/dashboard/ClientProgressSu
 import DietaryProgressSummary from '@/sections/trainer/dashboard/DietaryProgressSummary'
 import ScheduleOverview from '@/sections/trainer/dashboard/ScheduleOverview'
 import QuickActions from '@/sections/trainer/dashboard/QuickActions'
+import CalorieBurnChartSummary from '@/sections/trainer/dashboard/CalorieBurnChartSummary'
 
 const TrainerDashboard = () => {
   const auth = getAuth()
@@ -146,6 +147,8 @@ const TrainerDashboard = () => {
           <QuickActions navigate={navigate} />
         </div>
       </div>
+
+      <CalorieBurnChartSummary clients={clients} analyticsData={analyticsData} />
     </div>
   )
 }

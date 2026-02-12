@@ -1,0 +1,154 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =============================================
+    // HELPER FUNCTIONS
+    // =============================================
+
+    // Check if the request is from an authenticated user
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if the authenticated user is the document owner
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Get the role of the currently authenticated user
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    // Check if the authenticated user is a trainer
+    function isTrainer() {
+      return isAuthenticated() && getUserRole() == 'trainer';
+    }
+
+    // Check if the authenticated user is a trainee
+    function isTrainee() {
+      return isAuthenticated() && getUserRole() == 'trainee';
+    }
+
+    // Check if the trainer has this trainee in their traineeIds list
+    function isTrainerOfTrainee(traineeId) {
+      return isTrainer()
+        && traineeId in get(/databases/$(database)/documents/trainers/$(request.auth.uid)).data.traineeIds;
+    }
+
+    // =============================================
+    // COLLECTION: users
+    // =============================================
+    // - Document ID = Firebase Auth UID
+    // - Fields: uid, email, displayName, role, gender, age,
+    //           height, weight, activityLevel, profilePicUrl, createdAt
+    // =============================================
+    match /users/{userId} {
+
+      // CREATE: Only the authenticated user can create their own document
+      // Allowed during signup (email or Google)
+      allow create: if isOwner(userId)
+        && request.resource.data.uid == userId
+        && request.resource.data.keys().hasAll(['uid', 'email', 'createdAt']);
+
+      // READ:
+      // - Users can read their own document
+      // - Trainers can read their assigned trainees' documents (for analytics/client list)
+      allow read: if isOwner(userId)
+        || isTrainerOfTrainee(userId);
+
+      // UPDATE: Only the document owner can update their own profile
+      // Prevents trainers from modifying trainee user data
+      // Cannot change uid, email, or createdAt after creation
+      allow update: if isOwner(userId)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'email', 'createdAt']);
+
+      // DELETE: Not allowed from client - manage via Firebase Console
+      allow delete: if false;
+    }
+
+    // =============================================
+    // SPECIAL RULE: users collection query by email
+    // =============================================
+    // Trainers need to query users by email to invite trainees.
+    // Firestore rules for queries require the rule to match
+    // the query constraints. The read rule above on /users/{userId}
+    // handles individual document reads. For the email query used
+    // in getUserByEmail(), trainers need list access.
+    // This is handled by allowing trainers to list users with
+    // an email filter (the query: where('email', '==', email)).
+    // We add a collection-level rule for this.
+    // =============================================
+    match /users/{userId} {
+      allow list: if isTrainer();
+    }
+
+    // =============================================
+    // COLLECTION: traineeGoals
+    // =============================================
+    // - Document ID = Trainee's Firebase Auth UID
+    // - Fields: userId, goals, preferredWorkoutTypes,
+    //           frequencyPerWeek, targetTimeline,
+    //           completedWorkouts, completedMeals, createdAt
+    // =============================================
+    match /traineeGoals/{userId} {
+
+      // CREATE: Only the trainee themselves during onboarding
+      allow create: if isOwner(userId)
+        && request.resource.data.userId == userId
+        && request.resource.data.keys().hasAll(['userId', 'completedWorkouts', 'completedMeals', 'createdAt']);
+
+      // READ:
+      // - Trainees can read their own goals
+      // - Trainers can read their assigned trainees' goals (for analytics)
+      allow read: if isOwner(userId)
+        || isTrainerOfTrainee(userId);
+
+      // UPDATE: Only the trainee themselves can update
+      // (mark workouts/meals complete, update goals)
+      // Cannot change userId or createdAt
+      allow update: if isOwner(userId)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['userId', 'createdAt']);
+
+      // DELETE: Not allowed from client
+      allow delete: if false;
+    }
+
+    // =============================================
+    // COLLECTION: trainers
+    // =============================================
+    // - Document ID = Trainer's Firebase Auth UID
+    // - Fields: userId, specialties, certifications,
+    //           availability, traineeIds, createdAt
+    // =============================================
+    match /trainers/{trainerId} {
+
+      // CREATE: Only the trainer themselves during onboarding
+      allow create: if isOwner(trainerId)
+        && request.resource.data.userId == trainerId
+        && request.resource.data.keys().hasAll(['userId', 'createdAt']);
+
+      // READ: Only the trainer themselves can read their profile
+      // Trainees do not access trainer profiles in the current app
+      allow read: if isOwner(trainerId);
+
+      // UPDATE: Only the trainer themselves can update their profile
+      // (availability, certifications, specialties, traineeIds)
+      // Cannot change userId or createdAt
+      allow update: if isOwner(trainerId)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['userId', 'createdAt']);
+
+      // DELETE: Not allowed from client
+      allow delete: if false;
+    }
+
+    // =============================================
+    // CATCH-ALL: Deny access to all other collections
+    // =============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
