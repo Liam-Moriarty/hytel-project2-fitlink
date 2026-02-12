@@ -100,7 +100,9 @@ const OnBoardStep5 = ({ role, form }: OnBoardStepProps) => {
                               onCheckedChange={checked => {
                                 return checked
                                   ? field.onChange([...(field.value || []), day])
-                                  : field.onChange(field.value?.filter(value => value !== day))
+                                  : field.onChange(
+                                      field.value?.filter((value: string) => value !== day)
+                                    )
                               }}
                             />
                           </FormControl>
