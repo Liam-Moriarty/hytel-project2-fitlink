@@ -10,16 +10,22 @@ const mockSetDoc = vi.fn()
 const mockGetDoc = vi.fn()
 const mockDoc = vi.fn()
 
-vi.mock('firebase/auth', () => ({
-  createUserWithEmailAndPassword: (...args: unknown[]) => mockCreateUser(...args),
-  signInWithEmailAndPassword: (...args: unknown[]) => mockSignInWithEmailAndPassword(...args),
-  signInWithPopup: (...args: unknown[]) => mockSignInWithPopup(...args),
-  GoogleAuthProvider: vi.fn().mockImplementation(() => ({
-    setCustomParameters: vi.fn(),
-  })),
-  signOut: (...args: unknown[]) => mockSignOut(...args),
-  updateProfile: (...args: unknown[]) => mockUpdateProfile(...args),
-}))
+vi.mock('firebase/auth', () => {
+  const mockSetCustomParametersLocal = vi.fn()
+
+  class MockGoogleAuthProvider {
+    setCustomParameters = mockSetCustomParametersLocal
+  }
+
+  return {
+    createUserWithEmailAndPassword: (...args: unknown[]) => mockCreateUser(...args),
+    signInWithEmailAndPassword: (...args: unknown[]) => mockSignInWithEmailAndPassword(...args),
+    signInWithPopup: (...args: unknown[]) => mockSignInWithPopup(...args),
+    GoogleAuthProvider: MockGoogleAuthProvider,
+    signOut: (...args: unknown[]) => mockSignOut(...args),
+    updateProfile: (...args: unknown[]) => mockUpdateProfile(...args),
+  }
+})
 
 vi.mock('firebase/firestore', () => ({
   doc: (...args: unknown[]) => mockDoc(...args),

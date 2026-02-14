@@ -9,7 +9,14 @@
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "pnpm run test:unit && pnpm run test:components && pnpm run test:pages:auth && pnpm run test:pages:onboarding && pnpm run test:pages:trainer && pnpm run test:pages:trainee",
+    "test:unit": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest run src/lib src/hooks",
+    "test:components": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest run src/components",
+    "test:pages:auth": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest run src/pages/auth",
+    "test:pages:onboarding": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest run src/pages/onboarding",
+    "test:pages:trainer": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest run src/pages/trainer",
+    "test:pages:trainee": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest run src/pages/trainee",
+    "test:watch": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -55,6 +62,7 @@
     "@types/react-dom": "^18.3.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^10.1.0",
     "eslint": "^8.57.0",
     "jsdom": "^25.0.1",
     "postcss": "^8.4.49",

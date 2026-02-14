@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom'
+import { afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
 
 // Mock window.matchMedia for jsdom environment
 Object.defineProperty(window, 'matchMedia', {
@@ -13,4 +15,14 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
+})
+
+afterEach(() => {
+  cleanup()
+  vi.clearAllMocks()
+})
+
+// Optional: Clear between each test
+beforeEach(() => {
+  cleanup()
 })

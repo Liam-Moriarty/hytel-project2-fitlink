@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach } from 'vitest'
 import { createElement } from 'react'
 
 vi.mock('@/hooks/useUser', () => ({
@@ -82,6 +83,15 @@ vi.mock('@/sections/trainee/progress/WeeklyDietaryActivity', () => ({
 import ProgressPage from '../Progress'
 
 describe('ProgressPage', () => {
+  beforeEach(() => {
+    // Clear any previous renders
+    cleanup()
+  })
+
+  afterEach(() => {
+    cleanup()
+  })
+
   it('renders all section components', () => {
     render(createElement(ProgressPage))
 
